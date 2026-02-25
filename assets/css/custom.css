@@ -1,0 +1,63 @@
+ .range-label {
+     display: grid;
+     grid-template-columns: repeat(10, 1fr);
+ }
+
+ .range-label span {
+     text-align: right;
+ }
+
+ .input-text-extra {
+     border-top: none;
+     border-left: none;
+     border-right: none;
+     border-bottom: 1px solid grey;
+     width: 100%;
+ }
+
+ td.text-top {
+     vertical-align: top;
+ }
+
+ td.data::before {
+     content: ':';
+     position: absolute;
+     top: 50%;
+     left: -2px;
+     transform: translateY(-50%);
+ }
+
+ .w120 {
+     min-width: 120px;
+ }
+
+ .w200 {
+     min-width: 200px;
+ }
+
+ .w300 {
+     min-width: 300px;
+ }
+
+ .form-check-input-md {
+     width: 1.2em;
+     height: 1.2em;
+     cursor: pointer;
+     margin-top: 0.1rem;
+ }
+
+ .form-check-label-md {
+     font-size: 1.0rem;
+     cursor: pointer;
+     padding-left: 8px;
+ }
+
+ .form-check-custom {
+     display: flex;
+     align-items: center;
+ }
+
+ textarea.form-control {
+     border: 1px solid #ced4da;
+     border-radius: 4px;
+ }
