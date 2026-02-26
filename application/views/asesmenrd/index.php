@@ -108,8 +108,8 @@
             <div class="card-box p-2">
                 <div class="nav flex-column nav-pills" role="tablist" aria-orientation="vertical">
                     <a class="nav-link text-dark text-start p-2 m-1 border asesment-button active" href="#"
-                        onclick="return openContent(this,'<?= base_url(); ?>AsesmenRD/form_asesmen_keperawatan?no_rwt=<?= $no_rawat; ?>');">
-                        <i class="fa fa-file-lines"></i> Asesmen Keperawatan</a>
+                        onclick="return openContent(this,'<?= base_url(); ?>AsesmenRD/form_penilaian_fisik?no_rwt=<?= $no_rawat; ?>');">
+                        <i class="fa fa-file-lines"></i> Penilaian Fisik</a>
                     <a class="nav-link text-dark text-start p-2 m-1 border asesment-button" href="#"
                         onclick="return openContent(this,'<?= base_url(); ?>AsesmenRD/form_skala_nyeri_wong_baker?no_rwt=<?= $no_rawat; ?>');">
                         <i class="fa fa-file-lines"></i> Pengkajian Nyeri</a>
@@ -175,7 +175,7 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script type="text/javascript">
     $(document).ready(function() {
-        openContent(false, '<?= base_url(); ?>AsesmenRD/form_asesmen_keperawatan?no_rwt=<?= $no_rawat; ?>');
+        openContent(false, '<?= base_url(); ?>AsesmenRD/form_penilaian_fisik?no_rwt=<?= $no_rawat; ?>');
         $('.select2').select2();
     });
 

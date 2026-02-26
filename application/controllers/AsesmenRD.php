@@ -32,11 +32,11 @@ class AsesmenRD extends CI_Controller
 
   // ==================== FORM LOADERS (AJAX) ====================
 
-  public function form_asesmen_keperawatan()
+  public function form_penilaian_fisik()
   {
     $data['no_rawat'] = $this->input->get_post('no_rwt');
     $data['petugas'] = $this->_dummy_petugas();
-    $this->load->view('asesmenrd/form-asesmen-keperawatan', $data);
+    $this->load->view('asesmenrd/form-penilaian-fisik', $data);
   }
 
   public function form_skala_nyeri_wong_baker()
@@ -107,6 +107,56 @@ class AsesmenRD extends CI_Controller
     $data['no_rawat'] = $this->input->get_post('no_rwt');
     $data['petugas'] = $this->_dummy_petugas();
     $this->load->view('asesmenrd/form-tindak-lanjut-dan-pemulangan', $data);
+  }
+
+  // ==================== SIMPAN DATA ====================
+
+  public function simpan_penilaian_fisik()
+  {
+    $data = [
+      'no_rawat'                    => $this->input->post('no_rawat'),
+      'kunjungan_umum_gcs'          => $this->input->post('kunjungan_umum_gcs'),
+      'kunjungan_umum_e'            => $this->input->post('kunjungan_umum_e'),
+      'kunjungan_umum_v'            => $this->input->post('kunjungan_umum_v'),
+      'kunjungan_umum_m'            => $this->input->post('kunjungan_umum_m'),
+      'kunjungan_umum_total'        => $this->input->post('kunjungan_umum_total'),
+      'tekanan_darah_sistolik'      => $this->input->post('tekanan_darah_sistolik'),
+      'tekanan_darah_diastolik'     => $this->input->post('tekanan_darah_diastolik'),
+      'nadi'                        => $this->input->post('nadi'),
+      'spo2'                        => $this->input->post('spo2'),
+      'suhu_tubuh'                  => $this->input->post('suhu_tubuh'),
+      'respirasi'                   => $this->input->post('respirasi'),
+      'gds'                         => $this->input->post('gds'),
+      'tinggi_badan'                => $this->input->post('tinggi_badan'),
+      'berat_badan'                 => $this->input->post('berat_badan'),
+      'informasi_tambahan'          => $this->input->post('informasi_tambahan') ?: 0,
+      'informasi_tambahan_jelaskan' => $this->input->post('informasi_tambahan_jelaskan'),
+      'pernafasan'                  => $this->input->post('pernafasan'),
+      'pernafasan_lainnya'          => $this->input->post('pernafasan_lainnya'),
+      'penglihatan'                 => $this->input->post('penglihatan'),
+      'penglihatan_alat_bantu'      => $this->input->post('penglihatan_alat_bantu'),
+      'pendengaran'                 => $this->input->post('pendengaran'),
+      'pendengaran_alat_bantu'      => $this->input->post('pendengaran_alat_bantu'),
+      'mulut'                       => $this->input->post('mulut'),
+      'mulut_lainnya'               => $this->input->post('mulut_lainnya'),
+      'reflek'                      => $this->input->post('reflek'),
+      'menelan'                     => $this->input->post('menelan'),
+      'bicara'                      => $this->input->post('bicara'),
+      'luka'                        => $this->input->post('luka') ?: 0,
+      'luka_detail'                 => $this->input->post('luka_detail'),
+      'defekasi'                    => $this->input->post('defekasi'),
+      'milksi'                      => $this->input->post('milksi'),
+      'gastrointestinal'            => $this->input->post('gastrointestinal'),
+      'pola_tidur'                  => $this->input->post('pola_tidur') ?: 0,
+      'pola_tidur_masalah'          => $this->input->post('pola_tidur_masalah'),
+    ];
+
+    if ($this->db->insert('penilaian_fisik', $data)) {
+      $response = ['status' => true, 'message' => 'Data penilaian fisik berhasil disimpan'];
+    } else {
+      $response = ['status' => false, 'message' => 'Gagal menyimpan data'];
+    }
+    echo json_encode($response);
   }
 
   // ==================== DUMMY DATA ====================
