@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Feb 25, 2026 at 03:05 PM
+-- Generation Time: Feb 26, 2026 at 03:22 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `ci3_form`
+-- Database: `ngarid`
 --
 
 -- --------------------------------------------------------
@@ -37,13 +37,13 @@ CREATE TABLE `kunjungan` (
   `jk` enum('-','L','P','') NOT NULL,
   `tmp_lahir` varchar(50) NOT NULL,
   `tgl_lahir` date NOT NULL,
-  `alamat` text NOT NULL,
+  `alamat` mediumtext NOT NULL,
   `kd_poli` char(5) DEFAULT NULL,
   `stts` enum('Belum','Sudah','Batal','Berkas Diterima','Dirujuk','Meninggal','Dirawat','Pulang Paksa','Rujuk Balik') DEFAULT NULL,
   `status_lanjut` enum('Ralan','Ranap') NOT NULL,
   `umurdaftar` int(11) DEFAULT NULL,
   `status_bayar` enum('Sudah Bayar','Belum Bayar') NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci ROW_FORMAT=DYNAMIC;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 
 --
 -- Dumping data for table `kunjungan`

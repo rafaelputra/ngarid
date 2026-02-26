@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Feb 26, 2026 at 02:02 AM
+-- Generation Time: Feb 26, 2026 at 03:22 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -29,7 +29,7 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `penilaian_fisik` (
   `id` int(11) NOT NULL,
-  `no_rawat` varchar(17),
+  `no_rawat` varchar(17) NOT NULL,
   `kunjungan_umum_gcs` varchar(50) DEFAULT NULL,
   `kunjungan_umum_e` varchar(50) DEFAULT NULL,
   `kunjungan_umum_v` varchar(50) DEFAULT NULL,
@@ -64,7 +64,7 @@ CREATE TABLE `penilaian_fisik` (
   `gastrointestinal` enum('Normal','Refluks','Nausea','Muntah') NOT NULL DEFAULT 'Normal',
   `pola_tidur` tinyint(1) NOT NULL DEFAULT 0,
   `pola_tidur_masalah` varchar(255) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Indexes for dumped tables
@@ -75,8 +75,19 @@ CREATE TABLE `penilaian_fisik` (
 --
 ALTER TABLE `penilaian_fisik`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `fk_penilaian_kunjungan` (`no_rawat`),
-  ADD CONSTRAINT `fk_penilaian_kunjungan` FOREIGN KEY (`no_rawat`) REFERENCES `kunjungan` (`no_rawat`);
+  ADD KEY `no_rawat` (`no_rawat`);
+
+ALTER TABLE `penilaian_fisik`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `penilaian_fisik`
+--
+ALTER TABLE `penilaian_fisik`
+  ADD CONSTRAINT `fk_penilaian_kunjungan` FOREIGN KEY (`no_rawat`) REFERENCES `kunjungan` (`no_rawat`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

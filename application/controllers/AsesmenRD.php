@@ -32,89 +32,44 @@ class AsesmenRD extends CI_Controller
 
   // ==================== FORM LOADERS (AJAX) ====================
 
+  public function form_riwayat_psikososial()
+  {
+    $data['no_rawat'] = $this->input->get_post('no_rwt');
+    $this->load->view('asesmenrd/form-riwayat-psikososial', $data);
+  }
+
   public function form_penilaian_fisik()
   {
     $data['no_rawat'] = $this->input->get_post('no_rwt');
-    $data['petugas'] = $this->_dummy_petugas();
     $this->load->view('asesmenrd/form-penilaian-fisik', $data);
   }
 
-  public function form_skala_nyeri_wong_baker()
+  public function form_pasien_obstetri_gynekologi()
   {
     $data['no_rawat'] = $this->input->get_post('no_rwt');
-    $data['petugas'] = $this->_dummy_petugas();
-    $this->load->view('asesmenrd/form-skala-nyeri-wong-baker', $data);
+    $this->load->view('asesmenrd/form-pasien-obstetri-gynekologi', $data);
   }
 
-  public function form_pemeriksaan_fisik()
+  public function form_pengkajian_status_nutrisi()
   {
     $data['no_rawat'] = $this->input->get_post('no_rwt');
-    $data['petugas'] = $this->_dummy_petugas();
-    $this->load->view('asesmenrd/form-pemeriksaan-fisik', $data);
-  }
-
-  public function form_risiko_jatuh()
-  {
-    $data['no_rawat'] = $this->input->get_post('no_rwt');
-    $data['petugas'] = $this->_dummy_petugas();
-    $this->load->view('asesmenrd/form-risiko-jatuh', $data);
-  }
-
-  public function form_pemeriksaan_penunjang()
-  {
-    $data['no_rawat'] = $this->input->get_post('no_rwt');
-    $data['petugas'] = $this->_dummy_petugas();
-    $this->load->view('asesmenrd/form-pemeriksaan-penunjang', $data);
-  }
-
-  public function form_status_gizi()
-  {
-    $data['no_rawat'] = $this->input->get_post('no_rwt');
-    $data['petugas'] = $this->_dummy_petugas();
-    $this->load->view('asesmenrd/form-status-gizi', $data);
-  }
-
-  public function form_psikososial()
-  {
-    $data['no_rawat'] = $this->input->get_post('no_rwt');
-    $data['petugas'] = $this->_dummy_petugas();
-    $this->load->view('asesmenrd/form-psikososial', $data);
-  }
-
-  public function form_asuhan_keperawatan()
-  {
-    $data['no_rawat'] = $this->input->get_post('no_rwt');
-    $data['petugas'] = $this->_dummy_petugas();
-    $this->load->view('asesmenrd/form-asuhan-keperawatan', $data);
-  }
-
-  public function form_kebutuhan_komunikasi_dan_edukasi()
-  {
-    $data['no_rawat'] = $this->input->get_post('no_rwt');
-    $data['petugas'] = $this->_dummy_petugas();
-    $this->load->view('asesmenrd/form-kebutuhan-komunikasi-dan-edukasi', $data);
-  }
-
-  public function form_evaluasi_meninggalkan_ruang()
-  {
-    $data['no_rawat'] = $this->input->get_post('no_rwt');
-    $data['petugas'] = $this->_dummy_petugas();
-    $this->load->view('asesmenrd/form-evaluasi-meninggalkan-ruang', $data);
-  }
-
-  public function form_tindak_lanjut_dan_pemulangan()
-  {
-    $data['no_rawat'] = $this->input->get_post('no_rwt');
-    $data['petugas'] = $this->_dummy_petugas();
-    $this->load->view('asesmenrd/form-tindak-lanjut-dan-pemulangan', $data);
+    $this->load->view('asesmenrd/form-pengkajian-status-nutrisi', $data);
   }
 
   // ==================== SIMPAN DATA ====================
 
   public function simpan_penilaian_fisik()
   {
+    $this->output->set_content_type('application/json');
+
+    $no_rawat = $this->input->post('no_rawat');
+    if (empty($no_rawat)) {
+      echo json_encode(['status' => false, 'message' => 'No. Rawat tidak boleh kosong']);
+      return;
+    }
+
     $data = [
-      'no_rawat'                    => $this->input->post('no_rawat'),
+      'no_rawat'                    => $no_rawat,
       'kunjungan_umum_gcs'          => $this->input->post('kunjungan_umum_gcs'),
       'kunjungan_umum_e'            => $this->input->post('kunjungan_umum_e'),
       'kunjungan_umum_v'            => $this->input->post('kunjungan_umum_v'),
@@ -154,27 +109,9 @@ class AsesmenRD extends CI_Controller
     if ($this->db->insert('penilaian_fisik', $data)) {
       $response = ['status' => true, 'message' => 'Data penilaian fisik berhasil disimpan'];
     } else {
-      $response = ['status' => false, 'message' => 'Gagal menyimpan data'];
+      $error = $this->db->error();
+      $response = ['status' => false, 'message' => 'Gagal menyimpan data: ' . $error['message']];
     }
     echo json_encode($response);
-  }
-
-  // ==================== DUMMY DATA ====================
-
-  private function _dummy_petugas()
-  {
-    $petugas = [];
-    $names = [
-      ['nip' => 'P001', 'nama' => 'Ns. Siti Aminah, S.Kep'],
-      ['nip' => 'P002', 'nama' => 'Ns. Budi Santoso, S.Kep'],
-      ['nip' => 'P003', 'nama' => 'Ns. Dewi Rahayu, S.Kep'],
-    ];
-    foreach ($names as $n) {
-      $obj = new stdClass();
-      $obj->nip = $n['nip'];
-      $obj->nama = $n['nama'];
-      $petugas[] = $obj;
-    }
-    return $petugas;
   }
 }

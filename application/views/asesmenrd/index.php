@@ -107,39 +107,27 @@
         <div class="col-lg-3 col-12">
             <div class="card-box p-2">
                 <div class="nav flex-column nav-pills" role="tablist" aria-orientation="vertical">
-                    <a class="nav-link text-dark text-start p-2 m-1 border asesment-button active" href="#"
-                        onclick="return openContent(this,'<?= base_url(); ?>AsesmenRD/form_penilaian_fisik?no_rwt=<?= $no_rawat; ?>');">
-                        <i class="fa fa-file-lines"></i> Penilaian Fisik</a>
+                    <a class="nav-link text-dark text-start p-2 m-1 border asesment-button" href="#"
+                        onclick="return openContent(this,'<?= base_url(); ?>AsesmenRD/form_pemeriksaan_penunjang?no_rwt=<?= $no_rawat; ?>');">
+                        <i class="fa fa-file-lines"></i> Pemeriksaan Penunjang</a>
                     <a class="nav-link text-dark text-start p-2 m-1 border asesment-button" href="#"
                         onclick="return openContent(this,'<?= base_url(); ?>AsesmenRD/form_skala_nyeri_wong_baker?no_rwt=<?= $no_rawat; ?>');">
                         <i class="fa fa-file-lines"></i> Pengkajian Nyeri</a>
                     <a class="nav-link text-dark text-start p-2 m-1 border asesment-button" href="#"
                         onclick="return openContent(this,'<?= base_url(); ?>AsesmenRD/form_pemeriksaan_fisik?no_rwt=<?= $no_rawat; ?>');">
                         <i class="fa fa-file-lines"></i> Pemeriksaan Fisik</a>
-                    <a class="nav-link text-dark text-start p-2 m-1 border asesment-button" href="#"
-                        onclick="return openContent(this,'<?= base_url(); ?>AsesmenRD/form_risiko_jatuh?no_rwt=<?= $no_rawat; ?>');">
-                        <i class="fa fa-file-lines"></i> Pengkajian Risiko Jatuh</a>
-                    <a class="nav-link text-dark text-start p-2 m-1 border asesment-button" href="#"
-                        onclick="return openContent(this,'<?= base_url(); ?>AsesmenRD/form_pemeriksaan_penunjang?no_rwt=<?= $no_rawat; ?>');">
-                        <i class="fa fa-file-lines"></i> Pemeriksaan Penunjang</a>
-                    <a class="nav-link text-dark text-start p-2 m-1 border asesment-button" href="#"
-                        onclick="return openContent(this,'<?= base_url(); ?>AsesmenRD/form_status_gizi?no_rwt=<?= $no_rawat; ?>');">
-                        <i class="fa fa-file-lines"></i> Pengkajian status gizi</a>
-                    <a class="nav-link text-dark text-start p-2 m-1 border asesment-button" href="#"
-                        onclick="return openContent(this,'<?= base_url(); ?>AsesmenRD/form_psikososial?no_rwt=<?= $no_rawat; ?>');">
+                    <a class="nav-link text-dark text-start p-2 m-1 border asesment-button active" href="#"
+                        onclick="return openContent(this,'<?= base_url(); ?>AsesmenRD/form_riwayat_psikososial?no_rwt=<?= $no_rawat; ?>');">
                         <i class="fa fa-file-lines"></i> Riwayat Psikososial</a>
                     <a class="nav-link text-dark text-start p-2 m-1 border asesment-button" href="#"
-                        onclick="return openContent(this,'<?= base_url(); ?>AsesmenRD/form_asuhan_keperawatan?no_rwt=<?= $no_rawat; ?>');">
-                        <i class="fa fa-file-lines"></i> Asuhan keperawatan</a>
+                        onclick="return openContent(this,'<?= base_url(); ?>AsesmenRD/form_penilaian_fisik?no_rwt=<?= $no_rawat; ?>');">
+                        <i class="fa fa-file-lines"></i> Penilaian Fisik</a>
                     <a class="nav-link text-dark text-start p-2 m-1 border asesment-button" href="#"
-                        onclick="return openContent(this,'<?= base_url(); ?>AsesmenRD/form_kebutuhan_komunikasi_dan_edukasi?no_rwt=<?= $no_rawat; ?>');">
-                        <i class="fa fa-file-lines"></i> Kebutuhan komunikasi dan edukasi</a>
+                        onclick="return openContent(this,'<?= base_url(); ?>AsesmenRD/form_pasien_obstetri_gynekologi?no_rwt=<?= $no_rawat; ?>');">
+                        <i class="fa fa-file-lines"></i> Khusus untuk Pasien Obstetri Gynekologi</a>
                     <a class="nav-link text-dark text-start p-2 m-1 border asesment-button" href="#"
-                        onclick="return openContent(this,'<?= base_url(); ?>AsesmenRD/form_evaluasi_meninggalkan_ruang?no_rwt=<?= $no_rawat; ?>');">
-                        <i class="fa fa-file-lines"></i> Evaluasi sebelum meninggalkan ruang</a>
-                    <a class="nav-link text-dark text-start p-2 m-1 border asesment-button" href="#"
-                        onclick="return openContent(this,'<?= base_url(); ?>AsesmenRD/form_tindak_lanjut_dan_pemulangan?no_rwt=<?= $no_rawat; ?>');">
-                        <i class="fa fa-file-lines"></i> Tindak lanjut dan rencana Pemulangan</a>
+                        onclick="return openContent(this,'<?= base_url(); ?>AsesmenRD/form_pengkajian_status_nutrisi?no_rwt=<?= $no_rawat; ?>');">
+                        <i class="fa fa-file-lines"></i> Pengkajian Status Nutrisi</a>
                 </div>
             </div>
             <div class="card-box p-2 mt-2">
@@ -175,7 +163,7 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script type="text/javascript">
     $(document).ready(function() {
-        openContent(false, '<?= base_url(); ?>AsesmenRD/form_penilaian_fisik?no_rwt=<?= $no_rawat; ?>');
+        openContent(false, '<?= base_url(); ?>AsesmenRD/form_riwayat_psikososial?no_rwt=<?= $no_rawat; ?>');
         $('.select2').select2();
     });
 
@@ -242,12 +230,13 @@
                         Swal.fire({
                             icon: 'success',
                             title: 'Berhasil!',
+                            text: response.message || 'Data berhasil disimpan',
                             timer: 1500,
                             showConfirmButton: false
+                        }).then(function() {
+                            let refreshUrl = url.replace('simpan_', 'form_') + '?no_rwt=<?= $no_rawat; ?>';
+                            openContent(false, refreshUrl);
                         });
-
-                        let refreshUrl = url.replace('simpan_', 'form_') + '?no_rwt=<?= $no_rawat; ?>';
-                        openContent(false, refreshUrl);
                     } else {
                         Swal.fire('Gagal', response.message || 'Cek kembali isian Anda', 'error');
                     }
