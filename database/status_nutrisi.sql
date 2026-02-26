@@ -28,7 +28,7 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `status_nutrisi` (
-  `id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `id` int(11) NOT NULL,
   `no_rawat` varchar(17) NOT NULL,
   `penurunan_bb_opsi` varchar(5) NOT NULL,
   `penurunan_bb_skor` tinyint(1) NOT NULL DEFAULT 0,

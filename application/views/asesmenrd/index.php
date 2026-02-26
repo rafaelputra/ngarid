@@ -192,6 +192,10 @@
                 theme: 'bootstrap-5'
             });
             Swal.close();
+            // Trigger event setelah Swal loading benar-benar tertutup
+            setTimeout(function() {
+                $(document).trigger('formLoaded');
+            }, 300);
         }).fail(function() {
             Swal.fire('Error', 'Gagal memuat form, silakan refresh halaman.', 'error');
         });
@@ -227,6 +231,8 @@
                     dataType: 'json'
                 }).done(function(response) {
                     if (response.status) {
+                        // Hapus draft auto-save dari localStorage
+                        if (typeof pfAutoSave !== 'undefined') pfAutoSave.clear();
                         Swal.fire({
                             icon: 'success',
                             title: 'Berhasil!',
@@ -234,7 +240,7 @@
                             timer: 1500,
                             showConfirmButton: false
                         }).then(function() {
-                            let refreshUrl = url.replace('simpan_', 'form_') + '?no_rwt=<?= $no_rawat; ?>';
+                            let refreshUrl = url.replace('simpan_', 'form_').replace('update_', 'form_') + '?no_rwt=<?= $no_rawat; ?>';
                             openContent(false, refreshUrl);
                         });
                     } else {

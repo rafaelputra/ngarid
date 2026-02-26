@@ -34,25 +34,49 @@ class AsesmenRD extends CI_Controller
 
   public function form_riwayat_psikososial()
   {
-    $data['no_rawat'] = $this->input->get_post('no_rwt');
+    $no_rawat = $this->input->get_post('no_rwt');
+    $mode     = $this->input->get_post('mode');
+
+    $data['no_rawat'] = $no_rawat;
+    $data['pf']       = $this->db->get_where('riwayat_psikososial', ['no_rawat' => $no_rawat])->row();
+    $data['mode']     = $mode;
+
     $this->load->view('asesmenrd/form-riwayat-psikososial', $data);
   }
 
   public function form_penilaian_fisik()
   {
-    $data['no_rawat'] = $this->input->get_post('no_rwt');
+    $no_rawat = $this->input->get_post('no_rwt');
+    $mode     = $this->input->get_post('mode');
+
+    $data['no_rawat'] = $no_rawat;
+    $data['pf']       = $this->db->get_where('penilaian_fisik', ['no_rawat' => $no_rawat])->row();
+    $data['mode']     = $mode;
+
     $this->load->view('asesmenrd/form-penilaian-fisik', $data);
   }
 
   public function form_pasien_obstetri_gynekologi()
   {
-    $data['no_rawat'] = $this->input->get_post('no_rwt');
+    $no_rawat = $this->input->get_post('no_rwt');
+    $mode     = $this->input->get_post('mode');
+
+    $data['no_rawat'] = $no_rawat;
+    $data['pf']       = $this->db->get_where('obstetri', ['no_rawat' => $no_rawat])->row();
+    $data['mode']     = $mode;
+
     $this->load->view('asesmenrd/form-pasien-obstetri-gynekologi', $data);
   }
 
   public function form_pengkajian_status_nutrisi()
   {
-    $data['no_rawat'] = $this->input->get_post('no_rwt');
+    $no_rawat = $this->input->get_post('no_rwt');
+    $mode     = $this->input->get_post('mode');
+
+    $data['no_rawat'] = $no_rawat;
+    $data['pf']       = $this->db->get_where('status_nutrisi', ['no_rawat' => $no_rawat])->row();
+    $data['mode']     = $mode;
+
     $this->load->view('asesmenrd/form-pengkajian-status-nutrisi', $data);
   }
 
@@ -68,7 +92,63 @@ class AsesmenRD extends CI_Controller
       return;
     }
 
-    $data = [
+    $data = $this->_penilaian_fisik_data($no_rawat);
+
+    if ($this->db->insert('penilaian_fisik', $data)) {
+      $response = ['status' => true, 'message' => 'Data penilaian fisik berhasil disimpan'];
+    } else {
+      $error = $this->db->error();
+      $response = ['status' => false, 'message' => 'Gagal menyimpan data: ' . $error['message']];
+    }
+    echo json_encode($response);
+  }
+
+  public function update_penilaian_fisik()
+  {
+    $this->output->set_content_type('application/json');
+
+    $no_rawat = $this->input->post('no_rawat');
+    $id       = $this->input->post('id');
+    if (empty($no_rawat) || empty($id)) {
+      echo json_encode(['status' => false, 'message' => 'Data tidak valid']);
+      return;
+    }
+
+    $data = $this->_penilaian_fisik_data($no_rawat);
+
+    $this->db->where('id', $id);
+    if ($this->db->update('penilaian_fisik', $data)) {
+      $response = ['status' => true, 'message' => 'Data penilaian fisik berhasil diperbarui'];
+    } else {
+      $error = $this->db->error();
+      $response = ['status' => false, 'message' => 'Gagal memperbarui data: ' . $error['message']];
+    }
+    echo json_encode($response);
+  }
+
+  public function hapus_penilaian_fisik()
+  {
+    $this->output->set_content_type('application/json');
+
+    $id = $this->input->post('id');
+    if (empty($id)) {
+      echo json_encode(['status' => false, 'message' => 'Data tidak valid']);
+      return;
+    }
+
+    $this->db->where('id', $id);
+    if ($this->db->delete('penilaian_fisik')) {
+      $response = ['status' => true, 'message' => 'Data penilaian fisik berhasil dihapus'];
+    } else {
+      $error = $this->db->error();
+      $response = ['status' => false, 'message' => 'Gagal menghapus data: ' . $error['message']];
+    }
+    echo json_encode($response);
+  }
+
+  private function _penilaian_fisik_data($no_rawat)
+  {
+    return [
       'no_rawat'                    => $no_rawat,
       'kunjungan_umum_gcs'          => $this->input->post('kunjungan_umum_gcs'),
       'kunjungan_umum_e'            => $this->input->post('kunjungan_umum_e'),
@@ -105,13 +185,5 @@ class AsesmenRD extends CI_Controller
       'pola_tidur'                  => $this->input->post('pola_tidur') ?: 0,
       'pola_tidur_masalah'          => $this->input->post('pola_tidur_masalah'),
     ];
-
-    if ($this->db->insert('penilaian_fisik', $data)) {
-      $response = ['status' => true, 'message' => 'Data penilaian fisik berhasil disimpan'];
-    } else {
-      $error = $this->db->error();
-      $response = ['status' => false, 'message' => 'Gagal menyimpan data: ' . $error['message']];
-    }
-    echo json_encode($response);
   }
 }
