@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Feb 26, 2026 at 06:05 AM
+-- Generation Time: Feb 27, 2026 at 05:10 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -32,6 +32,7 @@ CREATE TABLE `status_nutrisi` (
   `no_rawat` varchar(17) NOT NULL,
   `penurunan_bb_opsi` varchar(5) NOT NULL,
   `penurunan_bb_skor` tinyint(1) NOT NULL DEFAULT 0,
+  `penurunan_bb_kesimpulan` varchar(30) NOT NULL,
   `asupan_makanan_dlo` enum('Tidak','Ya') DEFAULT NULL,
   `diagnosa_khusus` enum('DM','CKD','Infeksi Kronis','Lain-lain') NOT NULL,
   `diagnosa_khusus_lainnya` varchar(50) DEFAULT NULL,
@@ -43,6 +44,14 @@ CREATE TABLE `status_nutrisi` (
   `kondisi_khusus_lainnya` varchar(50) DEFAULT NULL,
   `kesimpulan_og` enum('Ya','Tidak') DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `status_nutrisi`
+--
+
+INSERT INTO `status_nutrisi` (`id`, `no_rawat`, `penurunan_bb_opsi`, `penurunan_bb_skor`, `penurunan_bb_kesimpulan`, `asupan_makanan_dlo`, `diagnosa_khusus`, `diagnosa_khusus_lainnya`, `asupan_makanan_og`, `ada_pertambahan`, `nilai_hb_hct`, `kondisi_khusus`, `kondisi_khusus_ya`, `kondisi_khusus_lainnya`, `kesimpulan_og`) VALUES
+(1, 'RW2024020002', 'c3', 3, '', 'Tidak', 'DM', NULL, 'Ya', 'Tidak', 'Ya', 'Ya', 'Lainnya', '', 'Ya'),
+(3, 'RW2024020001', 'a', 0, 'Tidak Beresiko Malnutrisi', 'Tidak', 'DM', NULL, 'Tidak', 'Tidak', 'Tidak', 'Tidak', 'DM', NULL, 'Tidak');
 
 --
 -- Indexes for dumped tables
@@ -63,7 +72,7 @@ ALTER TABLE `status_nutrisi`
 -- AUTO_INCREMENT for table `status_nutrisi`
 --
 ALTER TABLE `status_nutrisi`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- Constraints for dumped tables

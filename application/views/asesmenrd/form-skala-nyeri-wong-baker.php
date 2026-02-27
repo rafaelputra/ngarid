@@ -1,4 +1,29 @@
-<h5 class="fw-bold text-primary mb-3"><i class="fa fa-file-lines"></i> Pengkajian Skala Nyeri Wong Baker</h5>
+<style>
+  #form-skala-nyeri {
+    font-size: 1rem;
+  }
+
+  #form-skala-nyeri .form-label {
+    font-size: 1rem;
+    margin-bottom: .25rem;
+  }
+
+  #form-skala-nyeri .form-check-label,
+  #form-skala-nyeri .form-check-label-md {
+    font-size: 1rem;
+  }
+
+  #form-skala-nyeri .form-control,
+  #form-skala-nyeri .form-select {
+    font-size: 1rem;
+  }
+
+  .nyeri-title {
+    font-size: 1.3rem;
+  }
+</style>
+
+<h5 class="fw-bold text-primary mb-3 nyeri-title"><i class="fa fa-file-lines"></i> Pengkajian Skala Nyeri Wong Baker</h5>
 <hr>
 
 <form class="row" id="form-skala-nyeri">
@@ -56,10 +81,10 @@
       foreach ($faces as $val => $face): ?>
         <div class="text-center">
           <label class="d-flex flex-column align-items-center cursor-pointer" style="cursor:pointer;">
-            <span style="font-size: 2.5rem;"><?= $face['emoji'] ?></span>
+            <span style="font-size: 3rem;"><?= $face['emoji'] ?></span>
             <input type="radio" name="skala_poin" value="<?= $val ?>" class="form-check-input mt-1" onchange="updateSkalaLabel(this)">
             <small class="mt-1" style="color: <?= $face['color'] ?>; font-weight: bold;"><?= $val ?></small>
-            <small class="text-muted" style="font-size: 0.7rem;"><?= $face['label'] ?></small>
+            <small class="text-muted" style="font-size: 0.85rem;"><?= $face['label'] ?></small>
           </label>
         </div>
       <?php endforeach; ?>

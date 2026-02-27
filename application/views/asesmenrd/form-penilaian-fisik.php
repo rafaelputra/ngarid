@@ -1,46 +1,46 @@
 <style>
   #form-assesment-global {
-    font-size: 0.9rem;
+    font-size: 1rem;
   }
 
   #form-assesment-global .section-heading {
-    font-size: 1rem;
+    font-size: 1.1rem;
     margin-bottom: .25rem;
   }
 
   #form-assesment-global .form-label {
-    font-size: 0.9rem;
+    font-size: 1rem;
     margin-bottom: .25rem;
   }
 
   #form-assesment-global .form-check-label {
-    font-size: 0.9rem;
+    font-size: 1rem;
   }
 
   #form-assesment-global .form-control,
   #form-assesment-global .form-select {
-    font-size: 0.9rem;
+    font-size: 1rem;
   }
 
   #form-assesment-global table td {
-    font-size: 0.9rem;
+    font-size: 1rem;
     vertical-align: middle;
     padding: .35rem .5rem;
   }
 
   #form-assesment-global table .form-control {
-    font-size: 0.9rem;
+    font-size: 1rem;
     padding: .3rem .5rem;
     height: auto;
   }
 
   .pf-title {
-    font-size: 1.15rem;
+    font-size: 1.3rem;
   }
 
   /* Read-mode table */
   .pf-read-table {
-    font-size: 0.9rem;
+    font-size: 1rem;
   }
 
   .pf-read-table th {
@@ -59,7 +59,7 @@
     background-color: #e8f0fe;
     font-weight: 600;
     color: #0d6efd;
-    font-size: 0.95rem;
+    font-size: 1.05rem;
   }
 </style>
 
@@ -74,15 +74,6 @@ $read_mode = ($has_data && $mode !== 'edit');
 
 <?php if ($read_mode): ?>
   <!-- ===================== READ MODE (Tabel) ===================== -->
-  <div class="mb-3">
-    <button type="button" class="btn btn-warning btn-sm" id="btn-edit-pf">
-      <i class="fa fa-pen-to-square"></i> Edit
-    </button>
-    <button type="button" class="btn btn-danger btn-sm" id="btn-hapus-pf">
-      <i class="fa fa-trash"></i> Hapus
-    </button>
-  </div>
-
   <table class="table table-bordered pf-read-table">
     <tr class="pf-section-row">
       <td colspan="2"><i class="fa fa-stethoscope"></i> Keadaan Umum & GCS</td>
@@ -204,6 +195,15 @@ $read_mode = ($has_data && $mode !== 'edit');
       <td><?= $pf->pola_tidur ? 'Masalah' : 'Normal' ?><?= $pf->pola_tidur && $pf->pola_tidur_masalah ? ' &mdash; ' . htmlspecialchars($pf->pola_tidur_masalah) : '' ?></td>
     </tr>
   </table>
+
+  <div class="mt-3 mb-3">
+    <button type="button" class="btn btn-warning btn-sm" id="btn-edit-pf">
+      <i class="fa fa-pen-to-square"></i> Edit
+    </button>
+    <button type="button" class="btn btn-danger btn-sm" id="btn-hapus-pf">
+      <i class="fa fa-trash"></i> Hapus
+    </button>
+  </div>
 
   <script>
     // Edit button — reload form in edit mode

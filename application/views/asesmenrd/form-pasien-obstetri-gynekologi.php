@@ -1,46 +1,46 @@
 <style>
     #form-assesment-global {
-        font-size: 0.9rem;
+        font-size: 1rem;
     }
 
     #form-assesment-global .section-heading {
-        font-size: 1rem;
+        font-size: 1.1rem;
         margin-bottom: .25rem;
     }
 
     #form-assesment-global .form-label {
-        font-size: 0.9rem;
+        font-size: 1rem;
         margin-bottom: .25rem;
     }
 
     #form-assesment-global .form-check-label {
-        font-size: 0.9rem;
+        font-size: 1rem;
     }
 
     #form-assesment-global .form-control,
     #form-assesment-global .form-select {
-        font-size: 0.9rem;
+        font-size: 1rem;
     }
 
     #form-assesment-global table td {
-        font-size: 0.9rem;
+        font-size: 1rem;
         vertical-align: middle;
         padding: .35rem .5rem;
     }
 
     #form-assesment-global table .form-control {
-        font-size: 0.9rem;
+        font-size: 1rem;
         padding: .3rem .5rem;
         height: auto;
     }
 
     .pf-title {
-        font-size: 1.15rem;
+        font-size: 1.3rem;
     }
 
     /* Read-mode table */
     .pf-read-table {
-        font-size: 0.9rem;
+        font-size: 1rem;
     }
 
     .pf-read-table th {
@@ -59,164 +59,213 @@
         background-color: #e8f0fe;
         font-weight: 600;
         color: #0d6efd;
-        font-size: 0.95rem;
+        font-size: 1.05rem;
     }
 </style>
 
-<h5 class="fw-bold text-primary mb-3 pf-title"><i class="fa fa-file-lines"></i> Penilaian Fisik</h5>
+<h5 class="fw-bold text-primary mb-3 pf-title"><i class="fa fa-file-lines"></i> Khusus untuk Pasien Obstetri Gynekologi</h5>
 <hr>
 
 <?php
-$has_data  = !empty($pf);
-$edit_mode = ($has_data && $mode === 'edit');
-$read_mode = ($has_data && $mode !== 'edit');
+$has_data   = !empty($pf);
+$edit_mode  = ($has_data && $mode === 'edit');
+$read_mode  = ($has_data && $mode !== 'edit');
 ?>
 
 <?php if ($read_mode): ?>
-    <!-- ===================== READ MODE (Tabel) ===================== -->
-    <div class="mb-3">
-        <button type="button" class="btn btn-warning btn-sm" id="btn-edit-pf">
+    <!-- ============ READ MODE ============ -->
+    <?php
+    // Helper: ambil value dari $pf atau default
+    $v = function ($field, $default = '') use ($pf, $has_data) {
+        if ($has_data && isset($pf->$field)) {
+            return $pf->$field;
+        }
+        return $default;
+    };
+    ?>
+
+    <table class="table table-bordered pf-read-table">
+        <!-- Kehamilan -->
+        <tr class="pf-section-row">
+            <td colspan="2"><i class="fa fa-baby"></i> Data Kehamilan</td>
+        </tr>
+        <tr>
+            <th>Sedang Hamil</th>
+            <td><?= htmlspecialchars($v('is_hamil')) ?></td>
+        </tr>
+        <?php if ($v('is_hamil') === 'Ya'): ?>
+            <tr>
+                <th>HPHT</th>
+                <td><?= htmlspecialchars($v('hpht')) ?></td>
+            </tr>
+            <tr>
+                <th>HPL</th>
+                <td><?= htmlspecialchars($v('hpl')) ?></td>
+            </tr>
+            <tr>
+                <th>Usia Kehamilan (minggu)</th>
+                <td><?= htmlspecialchars($v('usia_hamil')) ?></td>
+            </tr>
+            <tr>
+                <th>Status G/P/A</th>
+                <td>G<?= htmlspecialchars($v('status_g')) ?> P<?= htmlspecialchars($v('status_p')) ?> A<?= htmlspecialchars($v('status_a')) ?></td>
+            </tr>
+            <tr>
+                <th>Penyulit Kehamilan</th>
+                <td><?= htmlspecialchars($v('penyulit_kehamilan')) ?></td>
+            </tr>
+            <?php if ($v('penyulit_kehamilan') === 'Ada'): ?>
+                <tr>
+                    <th>Detail Penyulit</th>
+                    <td><?= htmlspecialchars($v('detail_penyulit')) ?></td>
+                </tr>
+            <?php endif; ?>
+        <?php endif; ?>
+
+        <!-- Riwayat Menstruasi -->
+        <tr class="pf-section-row">
+            <td colspan="2"><i class="fa fa-calendar"></i> Riwayat Menstruasi</td>
+        </tr>
+        <tr>
+            <th>Riwayat Menstruasi</th>
+            <td><?= htmlspecialchars($v('riwayat_mens')) ?></td>
+        </tr>
+
+        <!-- Post Partum -->
+        <tr class="pf-section-row">
+            <td colspan="2"><i class="fa fa-heart"></i> Post Partum</td>
+        </tr>
+        <tr>
+            <th>Post Partum</th>
+            <td><?= htmlspecialchars($v('post_partum')) ?></td>
+        </tr>
+        <?php if ($v('post_partum') === 'Ya'): ?>
+            <tr>
+                <th>Post Partum Hari ke-</th>
+                <td><?= htmlspecialchars($v('post_partum_hari')) ?></td>
+            </tr>
+            <tr>
+                <th>Riwayat Persalinan</th>
+                <td><?= htmlspecialchars($v('riwayat_persalinan')) ?></td>
+            </tr>
+            <?php if ($v('riwayat_persalinan') === 'Partus Spontan dengan Penyulit'): ?>
+                <tr>
+                    <th>Jelaskan (Partus Spontan)</th>
+                    <td><?= htmlspecialchars($v('partus_spontan_jelaskan')) ?></td>
+                </tr>
+            <?php endif; ?>
+            <?php if ($v('riwayat_persalinan') === 'Partus dengan tindakan lainnya'): ?>
+                <tr>
+                    <th>Jelaskan (Tindakan)</th>
+                    <td><?= htmlspecialchars($v('partus_tindakan_jelaskan')) ?></td>
+                </tr>
+            <?php endif; ?>
+            <tr>
+                <th>Lochea</th>
+                <td><?= htmlspecialchars($v('lochea')) ?></td>
+            </tr>
+            <tr>
+                <th>Jumlah Lochea</th>
+                <td><?= htmlspecialchars($v('lochea_jumlah')) ?></td>
+            </tr>
+            <tr>
+                <th>Payudara</th>
+                <td><?= htmlspecialchars($v('payudara')) ?></td>
+            </tr>
+            <tr>
+                <th>Pengeluaran ASI</th>
+                <td><?= htmlspecialchars($v('pengeluaran_asi')) ?></td>
+            </tr>
+            <tr>
+                <th>Kontraksi</th>
+                <td><?= htmlspecialchars($v('kontraksi')) ?></td>
+            </tr>
+        <?php endif; ?>
+
+        <!-- Skrining Gynekologi -->
+        <tr class="pf-section-row">
+            <td colspan="2"><i class="fa fa-stethoscope"></i> Skrining Gynekologi</td>
+        </tr>
+        <tr>
+            <th>Riwayat Pap Smear</th>
+            <td><?= htmlspecialchars($v('riwayat_papsmear')) ?></td>
+        </tr>
+        <?php if ($v('riwayat_papsmear') === 'Pernah'): ?>
+            <tr>
+                <th>Tanggal Pap Smear</th>
+                <td><?= htmlspecialchars($v('papsmear_tanggal')) ?></td>
+            </tr>
+            <tr>
+                <th>Hasil Pap Smear</th>
+                <td><?= htmlspecialchars($v('papsmear_hasil')) ?></td>
+            </tr>
+        <?php endif; ?>
+        <tr>
+            <th>Mammografi</th>
+            <td><?= htmlspecialchars($v('mammografi')) ?></td>
+        </tr>
+        <?php if ($v('mammografi') === 'Pernah'): ?>
+            <tr>
+                <th>Tanggal Mammografi</th>
+                <td><?= htmlspecialchars($v('mammografi_tanggal')) ?></td>
+            </tr>
+            <tr>
+                <th>Hasil Mammografi</th>
+                <td><?= htmlspecialchars($v('mammografi_hasil')) ?></td>
+            </tr>
+        <?php endif; ?>
+        <tr>
+            <th>SADARI</th>
+            <td><?= htmlspecialchars($v('sadari')) ?></td>
+        </tr>
+        <?php if ($v('sadari') === 'Pernah'): ?>
+            <tr>
+                <th>Tanggal SADARI</th>
+                <td><?= htmlspecialchars($v('sadari_tanggal')) ?></td>
+            </tr>
+            <tr>
+                <th>Hasil SADARI</th>
+                <td><?= htmlspecialchars($v('sadari_hasil')) ?></td>
+            </tr>
+        <?php endif; ?>
+
+        <!-- Informasi Tambahan -->
+        <tr class="pf-section-row">
+            <td colspan="2"><i class="fa fa-info-circle"></i> Informasi Tambahan</td>
+        </tr>
+        <tr>
+            <th>Informasi Tambahan</th>
+            <td><?= htmlspecialchars($v('informasi_tambahan')) ?></td>
+        </tr>
+        <?php if ($v('informasi_tambahan') === 'Ada'): ?>
+            <tr>
+                <th>Detail Informasi</th>
+                <td><?= htmlspecialchars($v('informasi_tambahan_ada')) ?></td>
+            </tr>
+        <?php endif; ?>
+    </table>
+
+    <div class="mt-3 mb-3">
+        <button type="button" class="btn btn-warning btn-sm" id="btn-edit-obs">
             <i class="fa fa-pen-to-square"></i> Edit
         </button>
-        <button type="button" class="btn btn-danger btn-sm" id="btn-hapus-pf">
+        <button type="button" class="btn btn-danger btn-sm" id="btn-hapus-obs">
             <i class="fa fa-trash"></i> Hapus
         </button>
     </div>
 
-    <table class="table table-bordered pf-read-table">
-        <tr class="pf-section-row">
-            <td colspan="2"><i class="fa fa-stethoscope"></i> Keadaan Umum & GCS</td>
-        </tr>
-        <tr>
-            <th>Keadaan Umum</th>
-            <td><?= htmlspecialchars($pf->kunjungan_umum_gcs) ?></td>
-        </tr>
-        <tr>
-            <th>GCS E / V / M</th>
-            <td><?= $pf->kunjungan_umum_e ?> / <?= $pf->kunjungan_umum_v ?> / <?= $pf->kunjungan_umum_m ?></td>
-        </tr>
-        <tr>
-            <th>GCS Total</th>
-            <td><?= $pf->kunjungan_umum_total ?></td>
-        </tr>
-
-        <tr class="pf-section-row">
-            <td colspan="2"><i class="fa fa-stethoscope"></i> Tanda-tanda Vital</td>
-        </tr>
-        <tr>
-            <th>Tekanan Darah</th>
-            <td><?= $pf->tekanan_darah_sistolik ?> / <?= $pf->tekanan_darah_diastolik ?> mmHg</td>
-        </tr>
-        <tr>
-            <th>Nadi</th>
-            <td><?= $pf->nadi ?> x/menit</td>
-        </tr>
-        <tr>
-            <th>SpO2</th>
-            <td><?= htmlspecialchars($pf->spo2) ?> %</td>
-        </tr>
-        <tr>
-            <th>Suhu Tubuh</th>
-            <td><?= $pf->suhu_tubuh ?> &deg;C</td>
-        </tr>
-        <tr>
-            <th>Respirasi</th>
-            <td><?= $pf->respirasi ?> x/menit</td>
-        </tr>
-        <tr>
-            <th>GDS</th>
-            <td><?= htmlspecialchars($pf->gds) ?></td>
-        </tr>
-
-        <tr class="pf-section-row">
-            <td colspan="2"><i class="fa fa-stethoscope"></i> Tinggi Badan / Berat Badan</td>
-        </tr>
-        <tr>
-            <th>Tinggi Badan</th>
-            <td><?= $pf->tinggi_badan ?> cm</td>
-        </tr>
-        <tr>
-            <th>Berat Badan</th>
-            <td><?= $pf->berat_badan ?> kg</td>
-        </tr>
-
-        <tr class="pf-section-row">
-            <td colspan="2"><i class="fa fa-clipboard-list"></i> Informasi Tambahan</td>
-        </tr>
-        <tr>
-            <th>Informasi Tambahan</th>
-            <td><?= $pf->informasi_tambahan ? 'Ada' : 'Tidak ada' ?><?= $pf->informasi_tambahan && $pf->informasi_tambahan_jelaskan ? ' &mdash; ' . htmlspecialchars($pf->informasi_tambahan_jelaskan) : '' ?></td>
-        </tr>
-
-        <tr class="pf-section-row">
-            <td colspan="2"><i class="fa fa-stethoscope"></i> Pemeriksaan Fisik</td>
-        </tr>
-        <tr>
-            <th>Pernafasan</th>
-            <td><?= htmlspecialchars($pf->pernafasan) ?><?= $pf->pernafasan === 'Lain-lain' && $pf->pernafasan_lainnya ? ' &mdash; ' . htmlspecialchars($pf->pernafasan_lainnya) : '' ?></td>
-        </tr>
-        <tr>
-            <th>Penglihatan</th>
-            <td><?= htmlspecialchars($pf->penglihatan) ?><?= $pf->penglihatan === 'Alat Bantu' && $pf->penglihatan_alat_bantu ? ' &mdash; ' . htmlspecialchars($pf->penglihatan_alat_bantu) : '' ?></td>
-        </tr>
-        <tr>
-            <th>Pendengaran</th>
-            <td><?= htmlspecialchars($pf->pendengaran) ?><?= $pf->pendengaran === 'Alat Bantu' && $pf->pendengaran_alat_bantu ? ' &mdash; ' . htmlspecialchars($pf->pendengaran_alat_bantu) : '' ?></td>
-        </tr>
-        <tr>
-            <th>Mulut</th>
-            <td><?= htmlspecialchars($pf->mulut) ?><?= $pf->mulut === 'Lain-lain' && $pf->mulut_lainnya ? ' &mdash; ' . htmlspecialchars($pf->mulut_lainnya) : '' ?></td>
-        </tr>
-        <tr>
-            <th>Reflek</th>
-            <td><?= htmlspecialchars($pf->reflek) ?></td>
-        </tr>
-        <tr>
-            <th>Menelan</th>
-            <td><?= htmlspecialchars($pf->menelan) ?></td>
-        </tr>
-        <tr>
-            <th>Bicara</th>
-            <td><?= htmlspecialchars($pf->bicara) ?></td>
-        </tr>
-        <tr>
-            <th>Luka</th>
-            <td><?= $pf->luka ? 'Ada' : 'Tidak Ada' ?><?= $pf->luka && $pf->luka_detail ? ' &mdash; ' . htmlspecialchars($pf->luka_detail) : '' ?></td>
-        </tr>
-        <tr>
-            <th>Defekasi</th>
-            <td><?= htmlspecialchars($pf->defekasi) ?></td>
-        </tr>
-        <tr>
-            <th>Miksi (BAK)</th>
-            <td><?= htmlspecialchars($pf->milksi) ?></td>
-        </tr>
-        <tr>
-            <th>Gastrointestinal</th>
-            <td><?= htmlspecialchars($pf->gastrointestinal) ?></td>
-        </tr>
-
-        <tr class="pf-section-row">
-            <td colspan="2"><i class="fa fa-bed"></i> Pola Tidur</td>
-        </tr>
-        <tr>
-            <th>Pola Tidur</th>
-            <td><?= $pf->pola_tidur ? 'Masalah' : 'Normal' ?><?= $pf->pola_tidur && $pf->pola_tidur_masalah ? ' &mdash; ' . htmlspecialchars($pf->pola_tidur_masalah) : '' ?></td>
-        </tr>
-    </table>
-
     <script>
         // Edit button — reload form in edit mode
-        $('#btn-edit-pf').on('click', function() {
-            var url = '<?= base_url() ?>AsesmenRD/form_penilaian_fisik?no_rwt=<?= $no_rawat ?>&mode=edit';
+        $('#btn-edit-obs').on('click', function() {
+            var url = '<?= base_url() ?>AsesmenRD/form_pasien_obstetri_gynekologi?no_rwt=<?= $no_rawat ?>&mode=edit';
             openContent(false, url);
         });
 
         // Hapus button
-        $('#btn-hapus-pf').on('click', function() {
+        $('#btn-hapus-obs').on('click', function() {
             Swal.fire({
                 title: 'Hapus Data?',
-                text: "Data penilaian fisik akan dihapus permanen!",
+                text: "Data obstetri gynekologi akan dihapus permanen!",
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#dc3545',
@@ -230,7 +279,7 @@ $read_mode = ($has_data && $mode !== 'edit');
                         }
                     });
                     $.ajax({
-                        url: '<?= base_url() ?>AsesmenRD/hapus_penilaian_fisik',
+                        url: '<?= base_url() ?>AsesmenRD/hapus_obstetri',
                         type: 'POST',
                         data: {
                             id: <?= $pf->id ?>
@@ -245,7 +294,7 @@ $read_mode = ($has_data && $mode !== 'edit');
                                 timer: 1500,
                                 showConfirmButton: false
                             }).then(function() {
-                                var url = '<?= base_url() ?>AsesmenRD/form_penilaian_fisik?no_rwt=<?= $no_rawat ?>';
+                                var url = '<?= base_url() ?>AsesmenRD/form_pasien_obstetri_gynekologi?no_rwt=<?= $no_rawat ?>';
                                 openContent(false, url);
                             });
                         } else {
@@ -260,7 +309,7 @@ $read_mode = ($has_data && $mode !== 'edit');
     </script>
 
 <?php else: ?>
-    <!-- ===================== CREATE / EDIT MODE (Form) ===================== -->
+    <!-- ============ CREATE / EDIT MODE (Form) ============ -->
     <?php
     // Helper: get value from existing data (edit) or empty (create)
     $v = function ($field, $default = '') use ($pf, $edit_mode) {
@@ -269,352 +318,305 @@ $read_mode = ($has_data && $mode !== 'edit');
     ?>
 
     <form class="row" id="form-assesment-global"
-        action="<?= base_url() ?>AsesmenRD/<?= $edit_mode ? 'update_penilaian_fisik' : 'simpan_penilaian_fisik' ?>"
+        action="<?= base_url() ?>AsesmenRD/<?= $edit_mode ? 'update_pasien_obstetri_gynekologi' : 'simpan_pasien_obstetri_gynekologi' ?>"
         method="post">
         <input type="hidden" name="no_rawat" value="<?= $no_rawat; ?>">
         <?php if ($edit_mode): ?>
             <input type="hidden" name="id" value="<?= $pf->id; ?>">
         <?php endif; ?>
 
-        <!-- Keadaan Umum & GCS -->
+        <!-- ====== KEHAMILAN ====== -->
         <div class="col-12 mb-2">
-            <label class="form-label fw-bold text-primary section-heading"><i class="fa fa-stethoscope"></i> Keadaan Umum & GCS</label>
+            <label class="form-label fw-bold text-primary section-heading"><i class="fa fa-baby"></i> Data Kehamilan</label>
         </div>
 
-        <div class="col-md-4 mb-3">
-            <label class="form-label fw-bold">Keadaan Umum</label>
-            <input type="text" class="form-control" name="kunjungan_umum_gcs" placeholder="Keadaan umum pasien" value="<?= htmlspecialchars($v('kunjungan_umum_gcs')) ?>">
+        <div class="col-md-12 mb-3">
+            <label class="form-label fw-bold">Sedang Hamil</label>
+            <div class="d-flex flex-wrap gap-3">
+                <?php $hamil = $v('is_hamil', 'Tidak'); ?>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="is_hamil" value="Tidak" id="hamil_tidak" <?= $hamil == 'Tidak' ? 'checked' : '' ?> onchange="toggleHamil()">
+                    <label class="form-check-label" for="hamil_tidak">Tidak</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="is_hamil" value="Ya" id="hamil_ya" <?= $hamil == 'Ya' ? 'checked' : '' ?> onchange="toggleHamil()">
+                    <label class="form-check-label" for="hamil_ya">Ya</label>
+                </div>
+            </div>
         </div>
 
-        <div class="col-md-2 mb-3">
-            <label class="form-label fw-bold">GCS E</label>
-            <input type="number" class="form-control gcs-input" name="kunjungan_umum_e" id="gcs_e" value="<?= $v('kunjungan_umum_e') ?>">
-        </div>
-        <div class="col-md-2 mb-3">
-            <label class="form-label fw-bold">GCS V</label>
-            <input type="number" class="form-control gcs-input" name="kunjungan_umum_v" id="gcs_v" value="<?= $v('kunjungan_umum_v') ?>">
-        </div>
-        <div class="col-md-2 mb-3">
-            <label class="form-label fw-bold">GCS M</label>
-            <input type="number" class="form-control gcs-input" name="kunjungan_umum_m" id="gcs_m" value="<?= $v('kunjungan_umum_m') ?>">
-        </div>
-        <div class="col-md-2 mb-3">
-            <label class="form-label fw-bold">Total</label>
-            <input type="number" class="form-control" name="kunjungan_umum_total" id="gcs_total" readonly style="background-color: #e9ecef; font-weight: bold;" value="<?= $v('kunjungan_umum_total') ?>">
+        <div id="section-hamil" class="<?= $hamil == 'Ya' ? '' : 'd-none' ?>">
+            <div class="row">
+                <div class="col-md-4 mb-3">
+                    <label class="form-label fw-bold">HPHT</label>
+                    <input type="date" class="form-control" name="hpht" value="<?= htmlspecialchars($v('hpht')) ?>">
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label class="form-label fw-bold">HPL</label>
+                    <input type="date" class="form-control" name="hpl" value="<?= htmlspecialchars($v('hpl')) ?>">
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label class="form-label fw-bold">Usia Kehamilan (minggu)</label>
+                    <input type="number" class="form-control" name="usia_hamil" value="<?= htmlspecialchars($v('usia_hamil')) ?>" placeholder="Minggu">
+                </div>
+
+                <div class="col-md-4 mb-3">
+                    <label class="form-label fw-bold">Status G (Gravida)</label>
+                    <input type="text" class="form-control" name="status_g" value="<?= htmlspecialchars($v('status_g')) ?>" placeholder="Contoh: 2">
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label class="form-label fw-bold">Status P (Para)</label>
+                    <input type="text" class="form-control" name="status_p" value="<?= htmlspecialchars($v('status_p')) ?>" placeholder="Contoh: 1">
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label class="form-label fw-bold">Status A (Abortus)</label>
+                    <input type="text" class="form-control" name="status_a" value="<?= htmlspecialchars($v('status_a')) ?>" placeholder="Contoh: 0">
+                </div>
+
+                <div class="col-md-12 mb-3">
+                    <label class="form-label fw-bold">Penyulit Kehamilan</label>
+                    <div class="d-flex flex-wrap gap-3 mb-2">
+                        <?php $penyulit = $v('penyulit_kehamilan', 'Tidak Ada'); ?>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="penyulit_kehamilan" value="Tidak Ada" id="penyulit_tidak" <?= $penyulit == 'Tidak Ada' ? 'checked' : '' ?> onchange="togglePenyulit()">
+                            <label class="form-check-label" for="penyulit_tidak">Tidak Ada</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="penyulit_kehamilan" value="Ada" id="penyulit_ada" <?= $penyulit == 'Ada' ? 'checked' : '' ?> onchange="togglePenyulit()">
+                            <label class="form-check-label" for="penyulit_ada">Ada</label>
+                        </div>
+                    </div>
+                    <textarea class="form-control <?= $penyulit == 'Ada' ? '' : 'd-none' ?>" name="detail_penyulit" id="detail_penyulit" rows="2" placeholder="Jelaskan penyulit kehamilan..."><?= htmlspecialchars($v('detail_penyulit')) ?></textarea>
+                </div>
+            </div>
         </div>
 
-        <!-- Tanda Vital -->
-        <div class="col-12 mb-2">
-            <label class="form-label fw-bold text-primary section-heading"><i class="fa fa-stethoscope"></i> Tanda-tanda Vital</label>
-        </div>
-
-        <div class="col-md-6">
-            <table class="table table-borderless mb-0">
-                <tr>
-                    <td class="fw-bold" style="width:130px;">Tekanan Darah</td>
-                    <td>: <input type="number" class="form-control d-inline" name="tekanan_darah_sistolik" style="width:80px;" value="<?= $v('tekanan_darah_sistolik') ?>"> / <input type="number" class="form-control d-inline" name="tekanan_darah_diastolik" style="width:80px;" value="<?= $v('tekanan_darah_diastolik') ?>"> mmHg</td>
-                </tr>
-                <tr>
-                    <td class="fw-bold">Nadi</td>
-                    <td>: <input type="number" class="form-control d-inline" name="nadi" style="width:80px;" value="<?= $v('nadi') ?>"> x/menit</td>
-                </tr>
-                <tr>
-                    <td class="fw-bold">SpO2</td>
-                    <td>: <input type="text" class="form-control d-inline" name="spo2" style="width:80px;" value="<?= htmlspecialchars($v('spo2')) ?>"> %</td>
-                </tr>
-            </table>
-        </div>
-
-        <div class="col-md-6">
-            <table class="table table-borderless mb-0">
-                <tr>
-                    <td class="fw-bold" style="width:130px;">Suhu Tubuh</td>
-                    <td>: <input type="number" class="form-control d-inline" name="suhu_tubuh" style="width:80px;" value="<?= $v('suhu_tubuh') ?>"> &deg;C</td>
-                </tr>
-                <tr>
-                    <td class="fw-bold">Respirasi</td>
-                    <td>: <input type="number" class="form-control d-inline" name="respirasi" style="width:80px;" value="<?= $v('respirasi') ?>"> x/menit</td>
-                </tr>
-                <tr>
-                    <td class="fw-bold">GDS</td>
-                    <td>: <input type="text" class="form-control d-inline" name="gds" style="width:80px;" value="<?= htmlspecialchars($v('gds')) ?>"></td>
-                </tr>
-            </table>
-        </div>
-
-        <div class="col-12 mb-2">
-            <label class="form-label fw-bold text-primary section-heading"><i class="fa fa-stethoscope"></i> Tinggi Badan/Berat Badan</label>
-        </div>
-
-        <div class="col-md-3 mb-3">
-            <label class="form-label fw-bold">Tinggi Badan (cm)</label>
-            <input type="number" class="form-control" name="tinggi_badan" value="<?= $v('tinggi_badan') ?>">
-        </div>
-        <div class="col-md-3 mb-3">
-            <label class="form-label fw-bold">Berat Badan (kg)</label>
-            <input type="number" class="form-control" name="berat_badan" value="<?= $v('berat_badan') ?>">
-        </div>
-
-        <!-- Informasi Tambahan -->
+        <!-- ====== RIWAYAT MENSTRUASI ====== -->
         <div class="col-12 mb-2 mt-2">
-            <label class="form-label fw-bold text-primary section-heading"><i class="fa fa-clipboard-list"></i> Informasi Tambahan</label>
+            <label class="form-label fw-bold text-primary section-heading"><i class="fa fa-calendar"></i> Riwayat Menstruasi</label>
         </div>
 
         <div class="col-md-12 mb-3">
-            <div class="d-flex gap-3 mb-2">
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="informasi_tambahan" value="0" id="info_tidak" <?= $v('informasi_tambahan', '0') == '0' ? 'checked' : '' ?> onchange="toggleInfoTambahan()">
-                    <label class="form-check-label" for="info_tidak">Tidak ada</label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="informasi_tambahan" value="1" id="info_ya" <?= $v('informasi_tambahan') == '1' ? 'checked' : '' ?> onchange="toggleInfoTambahan()">
-                    <label class="form-check-label" for="info_ya">Ada</label>
-                </div>
-            </div>
-            <textarea class="form-control <?= $v('informasi_tambahan') == '1' ? '' : 'd-none' ?>" name="informasi_tambahan_jelaskan" id="info_tambahan_text" rows="2" placeholder="Jelaskan informasi tambahan..."><?= htmlspecialchars($v('informasi_tambahan_jelaskan')) ?></textarea>
-        </div>
-
-        <!-- Pernafasan -->
-        <div class="col-md-6 mb-3">
-            <label class="form-label fw-bold">Pernafasan</label>
-            <div class="d-flex flex-wrap gap-3 mb-2">
-                <?php $pern = $v('pernafasan', 'Normal'); ?>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="pernafasan" value="Normal" id="pernafasan_normal" <?= $pern == 'Normal' ? 'checked' : '' ?> onchange="toggleLainnya('pernafasan')">
-                    <label class="form-check-label" for="pernafasan_normal">Normal</label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="pernafasan" value="Batuk" id="pernafasan_batuk" <?= $pern == 'Batuk' ? 'checked' : '' ?> onchange="toggleLainnya('pernafasan')">
-                    <label class="form-check-label" for="pernafasan_batuk">Batuk</label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="pernafasan" value="Sesak" id="pernafasan_sesak" <?= $pern == 'Sesak' ? 'checked' : '' ?> onchange="toggleLainnya('pernafasan')">
-                    <label class="form-check-label" for="pernafasan_sesak">Sesak</label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="pernafasan" value="Lain-lain" id="pernafasan_lainlain" <?= $pern == 'Lain-lain' ? 'checked' : '' ?> onchange="toggleLainnya('pernafasan')">
-                    <label class="form-check-label" for="pernafasan_lainlain">Lain-lain</label>
-                </div>
-            </div>
-            <input type="text" class="form-control <?= $pern == 'Lain-lain' ? '' : 'd-none' ?>" name="pernafasan_lainnya" id="pernafasan_lainnya" placeholder="Sebutkan..." value="<?= htmlspecialchars($v('pernafasan_lainnya')) ?>">
-        </div>
-
-        <!-- Penglihatan -->
-        <div class="col-md-6 mb-3">
-            <label class="form-label fw-bold">Penglihatan</label>
-            <div class="d-flex flex-wrap gap-3 mb-2">
-                <?php $peng = $v('penglihatan', 'Baik'); ?>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="penglihatan" value="Baik" id="penglihatan_baik" <?= $peng == 'Baik' ? 'checked' : '' ?> onchange="toggleAlatBantu('penglihatan')">
-                    <label class="form-check-label" for="penglihatan_baik">Baik</label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="penglihatan" value="Rusak" id="penglihatan_rusak" <?= $peng == 'Rusak' ? 'checked' : '' ?> onchange="toggleAlatBantu('penglihatan')">
-                    <label class="form-check-label" for="penglihatan_rusak">Rusak</label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="penglihatan" value="Alat Bantu" id="penglihatan_alatbantu" <?= $peng == 'Alat Bantu' ? 'checked' : '' ?> onchange="toggleAlatBantu('penglihatan')">
-                    <label class="form-check-label" for="penglihatan_alatbantu">Alat Bantu</label>
-                </div>
-            </div>
-            <input type="text" class="form-control <?= $peng == 'Alat Bantu' ? '' : 'd-none' ?>" name="penglihatan_alat_bantu" id="penglihatan_alat_bantu" placeholder="Jenis alat bantu..." value="<?= htmlspecialchars($v('penglihatan_alat_bantu')) ?>">
-        </div>
-
-        <!-- Pendengaran -->
-        <div class="col-md-6 mb-3">
-            <label class="form-label fw-bold">Pendengaran</label>
-            <div class="d-flex flex-wrap gap-3 mb-2">
-                <?php $deng = $v('pendengaran', 'Baik'); ?>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="pendengaran" value="Baik" id="pendengaran_baik" <?= $deng == 'Baik' ? 'checked' : '' ?> onchange="toggleAlatBantu('pendengaran')">
-                    <label class="form-check-label" for="pendengaran_baik">Baik</label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="pendengaran" value="Rusak" id="pendengaran_rusak" <?= $deng == 'Rusak' ? 'checked' : '' ?> onchange="toggleAlatBantu('pendengaran')">
-                    <label class="form-check-label" for="pendengaran_rusak">Rusak</label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="pendengaran" value="Alat Bantu" id="pendengaran_alatbantu" <?= $deng == 'Alat Bantu' ? 'checked' : '' ?> onchange="toggleAlatBantu('pendengaran')">
-                    <label class="form-check-label" for="pendengaran_alatbantu">Alat Bantu</label>
-                </div>
-            </div>
-            <input type="text" class="form-control <?= $deng == 'Alat Bantu' ? '' : 'd-none' ?>" name="pendengaran_alat_bantu" id="pendengaran_alat_bantu" placeholder="Jenis alat bantu..." value="<?= htmlspecialchars($v('pendengaran_alat_bantu')) ?>">
-        </div>
-
-        <!-- Mulut -->
-        <div class="col-md-6 mb-3">
-            <label class="form-label fw-bold">Mulut</label>
-            <div class="d-flex flex-wrap gap-3 mb-2">
-                <?php $mlt = $v('mulut', 'Bersih'); ?>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="mulut" value="Bersih" id="mulut_bersih" <?= $mlt == 'Bersih' ? 'checked' : '' ?> onchange="toggleLainnya('mulut')">
-                    <label class="form-check-label" for="mulut_bersih">Bersih</label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="mulut" value="Kotor" id="mulut_kotor" <?= $mlt == 'Kotor' ? 'checked' : '' ?> onchange="toggleLainnya('mulut')">
-                    <label class="form-check-label" for="mulut_kotor">Kotor</label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="mulut" value="Lain-lain" id="mulut_lainlain" <?= $mlt == 'Lain-lain' ? 'checked' : '' ?> onchange="toggleLainnya('mulut')">
-                    <label class="form-check-label" for="mulut_lainlain">Lain-lain</label>
-                </div>
-            </div>
-            <input type="text" class="form-control <?= $mlt == 'Lain-lain' ? '' : 'd-none' ?>" name="mulut_lainnya" id="mulut_lainnya" placeholder="Sebutkan..." value="<?= htmlspecialchars($v('mulut_lainnya')) ?>">
-        </div>
-
-        <!-- Reflek, Menelan, Bicara -->
-        <div class="col-md-4 mb-3">
-            <label class="form-label fw-bold">Reflek</label>
+            <label class="form-label fw-bold">Riwayat Menstruasi</label>
             <div class="d-flex flex-wrap gap-3">
-                <?php $ref = $v('reflek', 'Normal'); ?>
+                <?php $mens = $v('riwayat_mens', 'Teratur'); ?>
                 <div class="form-check">
-                    <input class="form-check-input" type="radio" name="reflek" value="Normal" id="reflek_normal" <?= $ref == 'Normal' ? 'checked' : '' ?>>
-                    <label class="form-check-label" for="reflek_normal">Normal</label>
+                    <input class="form-check-input" type="radio" name="riwayat_mens" value="Teratur" id="mens_teratur" <?= $mens == 'Teratur' ? 'checked' : '' ?>>
+                    <label class="form-check-label" for="mens_teratur">Teratur</label>
                 </div>
                 <div class="form-check">
-                    <input class="form-check-input" type="radio" name="reflek" value="Sulit" id="reflek_sulit" <?= $ref == 'Sulit' ? 'checked' : '' ?>>
-                    <label class="form-check-label" for="reflek_sulit">Sulit</label>
+                    <input class="form-check-input" type="radio" name="riwayat_mens" value="Tidak Teratur" id="mens_tidak_teratur" <?= $mens == 'Tidak Teratur' ? 'checked' : '' ?>>
+                    <label class="form-check-label" for="mens_tidak_teratur">Tidak Teratur</label>
                 </div>
                 <div class="form-check">
-                    <input class="form-check-input" type="radio" name="reflek" value="Rusak" id="reflek_rusak" <?= $ref == 'Rusak' ? 'checked' : '' ?>>
-                    <label class="form-check-label" for="reflek_rusak">Rusak</label>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-4 mb-3">
-            <label class="form-label fw-bold">Menelan</label>
-            <div class="d-flex flex-wrap gap-3">
-                <?php $mnl = $v('menelan', 'Normal'); ?>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="menelan" value="Normal" id="menelan_normal" <?= $mnl == 'Normal' ? 'checked' : '' ?>>
-                    <label class="form-check-label" for="menelan_normal">Normal</label>
+                    <input class="form-check-input" type="radio" name="riwayat_mens" value="Monopause" id="mens_monopause" <?= $mens == 'Monopause' ? 'checked' : '' ?>>
+                    <label class="form-check-label" for="mens_monopause">Monopause</label>
                 </div>
                 <div class="form-check">
-                    <input class="form-check-input" type="radio" name="menelan" value="Gangguan" id="menelan_gangguan" <?= $mnl == 'Gangguan' ? 'checked' : '' ?>>
-                    <label class="form-check-label" for="menelan_gangguan">Gangguan</label>
+                    <input class="form-check-input" type="radio" name="riwayat_mens" value="Dismenorea" id="mens_dismenorea" <?= $mens == 'Dismenorea' ? 'checked' : '' ?>>
+                    <label class="form-check-label" for="mens_dismenorea">Dismenorea</label>
                 </div>
             </div>
         </div>
 
-        <div class="col-md-4 mb-3">
-            <label class="form-label fw-bold">Bicara</label>
-            <div class="d-flex flex-wrap gap-3">
-                <?php $bcr = $v('bicara', 'Normal'); ?>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="bicara" value="Normal" id="bicara_normal" <?= $bcr == 'Normal' ? 'checked' : '' ?>>
-                    <label class="form-check-label" for="bicara_normal">Normal</label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="bicara" value="Gangguan" id="bicara_gangguan" <?= $bcr == 'Gangguan' ? 'checked' : '' ?>>
-                    <label class="form-check-label" for="bicara_gangguan">Gangguan</label>
-                </div>
-            </div>
-        </div>
-
-        <!-- Luka -->
-        <div class="col-md-12 mb-3">
-            <label class="form-label fw-bold">Luka</label>
-            <div class="d-flex gap-3 mb-2">
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="luka" value="0" id="luka_tidak" <?= $v('luka', '0') == '0' ? 'checked' : '' ?> onchange="toggleLuka()">
-                    <label class="form-check-label" for="luka_tidak">Tidak Ada</label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="luka" value="1" id="luka_ya" <?= $v('luka') == '1' ? 'checked' : '' ?> onchange="toggleLuka()">
-                    <label class="form-check-label" for="luka_ya">Ada</label>
-                </div>
-            </div>
-            <textarea class="form-control <?= $v('luka') == '1' ? '' : 'd-none' ?>" name="luka_detail" id="luka_detail_text" rows="2" placeholder="Lokasi, jenis, ukuran luka..."><?= htmlspecialchars($v('luka_detail')) ?></textarea>
-        </div>
-
-        <div class="col-md-4 mb-3">
-            <label class="form-label fw-bold">Defekasi</label>
-            <div class="d-flex flex-column gap-1">
-                <?php $def = $v('defekasi', 'Normal'); ?>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="defekasi" value="Normal" id="defekasi_normal" <?= $def == 'Normal' ? 'checked' : '' ?>>
-                    <label class="form-check-label" for="defekasi_normal">Normal</label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="defekasi" value="Konstipasi" id="defekasi_konstipasi" <?= $def == 'Konstipasi' ? 'checked' : '' ?>>
-                    <label class="form-check-label" for="defekasi_konstipasi">Konstipasi</label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="defekasi" value="Inkontinensia alvi" id="defekasi_inkontinensia" <?= $def == 'Inkontinensia alvi' ? 'checked' : '' ?>>
-                    <label class="form-check-label" for="defekasi_inkontinensia">Inkontinensia alvi</label>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-4 mb-3">
-            <label class="form-label fw-bold">Miksi (BAK)</label>
-            <div class="d-flex flex-column gap-1">
-                <?php $mks = $v('milksi', 'Normal'); ?>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="milksi" value="Normal" id="miksi_normal" <?= $mks == 'Normal' ? 'checked' : '' ?>>
-                    <label class="form-check-label" for="miksi_normal">Normal</label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="milksi" value="Retensio" id="miksi_retensio" <?= $mks == 'Retensio' ? 'checked' : '' ?>>
-                    <label class="form-check-label" for="miksi_retensio">Retensio</label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="milksi" value="Inkontinensia uri" id="miksi_inkontinensia" <?= $mks == 'Inkontinensia uri' ? 'checked' : '' ?>>
-                    <label class="form-check-label" for="miksi_inkontinensia">Inkontinensia uri</label>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-4 mb-3">
-            <label class="form-label fw-bold">Gastrointestinal</label>
-            <div class="d-flex flex-column gap-1">
-                <?php $gas = $v('gastrointestinal', 'Normal'); ?>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="gastrointestinal" value="Normal" id="gastro_normal" <?= $gas == 'Normal' ? 'checked' : '' ?>>
-                    <label class="form-check-label" for="gastro_normal">Normal</label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="gastrointestinal" value="Refluks" id="gastro_refluks" <?= $gas == 'Refluks' ? 'checked' : '' ?>>
-                    <label class="form-check-label" for="gastro_refluks">Refluks</label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="gastrointestinal" value="Nausea" id="gastro_nausea" <?= $gas == 'Nausea' ? 'checked' : '' ?>>
-                    <label class="form-check-label" for="gastro_nausea">Nausea</label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="gastrointestinal" value="Muntah" id="gastro_muntah" <?= $gas == 'Muntah' ? 'checked' : '' ?>>
-                    <label class="form-check-label" for="gastro_muntah">Muntah</label>
-                </div>
-            </div>
-        </div>
-
-        <!-- Pola Tidur -->
+        <!-- ====== POST PARTUM ====== -->
         <div class="col-12 mb-2 mt-2">
-            <label class="form-label fw-bold text-primary section-heading"><i class="fa fa-bed"></i> Pola Tidur</label>
+            <label class="form-label fw-bold text-primary section-heading"><i class="fa fa-heart"></i> Post Partum</label>
         </div>
 
         <div class="col-md-12 mb-3">
-            <div class="d-flex gap-3 mb-2">
+            <label class="form-label fw-bold">Post Partum</label>
+            <div class="d-flex flex-wrap gap-3">
+                <?php $pp = $v('post_partum', 'Tidak'); ?>
                 <div class="form-check">
-                    <input class="form-check-input" type="radio" name="pola_tidur" value="0" id="tidur_tidak" <?= $v('pola_tidur', '0') == '0' ? 'checked' : '' ?> onchange="togglePolaTidur()">
-                    <label class="form-check-label" for="tidur_tidak">Normal</label>
+                    <input class="form-check-input" type="radio" name="post_partum" value="Tidak" id="pp_tidak" <?= $pp == 'Tidak' ? 'checked' : '' ?> onchange="togglePostPartum()">
+                    <label class="form-check-label" for="pp_tidak">Tidak</label>
                 </div>
                 <div class="form-check">
-                    <input class="form-check-input" type="radio" name="pola_tidur" value="1" id="tidur_ya" <?= $v('pola_tidur') == '1' ? 'checked' : '' ?> onchange="togglePolaTidur()">
-                    <label class="form-check-label" for="tidur_ya">Masalah</label>
+                    <input class="form-check-input" type="radio" name="post_partum" value="Ya" id="pp_ya" <?= $pp == 'Ya' ? 'checked' : '' ?> onchange="togglePostPartum()">
+                    <label class="form-check-label" for="pp_ya">Ya</label>
                 </div>
             </div>
-            <input type="text" class="form-control <?= $v('pola_tidur') == '1' ? '' : 'd-none' ?>" name="pola_tidur_masalah" id="pola_tidur_text" placeholder="Jelaskan masalah pola tidur..." value="<?= htmlspecialchars($v('pola_tidur_masalah')) ?>">
         </div>
 
-        <!-- Tombol Simpan -->
+        <div id="section-postpartum" class="<?= $pp == 'Ya' ? '' : 'd-none' ?>">
+            <div class="row">
+                <div class="col-md-4 mb-3">
+                    <label class="form-label fw-bold">Post Partum Hari ke-</label>
+                    <input type="number" class="form-control" name="post_partum_hari" value="<?= htmlspecialchars($v('post_partum_hari')) ?>" placeholder="Hari ke-">
+                </div>
+
+                <div class="col-md-8 mb-3">
+                    <label class="form-label fw-bold">Riwayat Persalinan</label>
+                    <div class="d-flex flex-wrap gap-3">
+                        <?php $persalinan = $v('riwayat_persalinan', 'Partus Spontan'); ?>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="riwayat_persalinan" value="Partus Spontan" id="persalinan_spontan" <?= $persalinan == 'Partus Spontan' ? 'checked' : '' ?> onchange="togglePersalinan()">
+                            <label class="form-check-label" for="persalinan_spontan">Partus Spontan</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="riwayat_persalinan" value="Sectio Caesaria" id="persalinan_sc" <?= $persalinan == 'Sectio Caesaria' ? 'checked' : '' ?> onchange="togglePersalinan()">
+                            <label class="form-check-label" for="persalinan_sc">Sectio Caesaria</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="riwayat_persalinan" value="Partus Spontan dengan Penyulit" id="persalinan_penyulit" <?= $persalinan == 'Partus Spontan dengan Penyulit' ? 'checked' : '' ?> onchange="togglePersalinan()">
+                            <label class="form-check-label" for="persalinan_penyulit">Partus Spontan dengan Penyulit</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="riwayat_persalinan" value="Partus dengan tindakan lainnya" id="persalinan_tindakan" <?= $persalinan == 'Partus dengan tindakan lainnya' ? 'checked' : '' ?> onchange="togglePersalinan()">
+                            <label class="form-check-label" for="persalinan_tindakan">Partus dengan tindakan lainnya</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 mb-3 <?= $persalinan == 'Partus Spontan dengan Penyulit' ? '' : 'd-none' ?>" id="wrap-partus-spontan-jelaskan">
+                    <label class="form-label fw-bold">Jelaskan (Partus Spontan dengan Penyulit)</label>
+                    <input type="text" class="form-control" name="partus_spontan_jelaskan" value="<?= htmlspecialchars($v('partus_spontan_jelaskan')) ?>" placeholder="Jelaskan penyulit...">
+                </div>
+
+                <div class="col-md-6 mb-3 <?= $persalinan == 'Partus dengan tindakan lainnya' ? '' : 'd-none' ?>" id="wrap-partus-tindakan-jelaskan">
+                    <label class="form-label fw-bold">Jelaskan (Tindakan Lainnya)</label>
+                    <input type="text" class="form-control" name="partus_tindakan_jelaskan" value="<?= htmlspecialchars($v('partus_tindakan_jelaskan')) ?>" placeholder="Jelaskan tindakan...">
+                </div>
+
+                <div class="col-md-4 mb-3">
+                    <label class="form-label fw-bold">Lochea</label>
+                    <input type="text" class="form-control" name="lochea" value="<?= htmlspecialchars($v('lochea')) ?>" placeholder="Jenis lochea...">
+                </div>
+
+                <div class="col-md-4 mb-3">
+                    <label class="form-label fw-bold">Jumlah Lochea</label>
+                    <input type="text" class="form-control" name="lochea_jumlah" value="<?= htmlspecialchars($v('lochea_jumlah')) ?>" placeholder="Jumlah...">
+                </div>
+
+                <div class="col-md-4 mb-3">
+                    <label class="form-label fw-bold">Payudara</label>
+                    <input type="text" class="form-control" name="payudara" value="<?= htmlspecialchars($v('payudara')) ?>" placeholder="Kondisi payudara...">
+                </div>
+
+                <div class="col-md-4 mb-3">
+                    <label class="form-label fw-bold">Pengeluaran ASI</label>
+                    <input type="text" class="form-control" name="pengeluaran_asi" value="<?= htmlspecialchars($v('pengeluaran_asi')) ?>" placeholder="Pengeluaran ASI...">
+                </div>
+
+                <div class="col-md-4 mb-3">
+                    <label class="form-label fw-bold">Kontraksi</label>
+                    <input type="text" class="form-control" name="kontraksi" value="<?= htmlspecialchars($v('kontraksi')) ?>" placeholder="Kontraksi uterus...">
+                </div>
+            </div>
+        </div>
+
+        <!-- ====== SKRINING GYNEKOLOGI ====== -->
+        <div class="col-12 mb-2 mt-2">
+            <label class="form-label fw-bold text-primary section-heading"><i class="fa fa-stethoscope"></i> Skrining Gynekologi</label>
+        </div>
+
+        <!-- Pap Smear -->
+        <div class="col-md-12 mb-3">
+            <label class="form-label fw-bold">Riwayat Pap Smear</label>
+            <div class="d-flex flex-wrap gap-3 mb-2">
+                <?php $pap = $v('riwayat_papsmear', 'Tidak Pernah'); ?>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="riwayat_papsmear" value="Tidak Pernah" id="pap_tidak" <?= $pap == 'Tidak Pernah' ? 'checked' : '' ?> onchange="togglePapsmear()">
+                    <label class="form-check-label" for="pap_tidak">Tidak Pernah</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="riwayat_papsmear" value="Pernah" id="pap_pernah" <?= $pap == 'Pernah' ? 'checked' : '' ?> onchange="togglePapsmear()">
+                    <label class="form-check-label" for="pap_pernah">Pernah</label>
+                </div>
+            </div>
+        </div>
+        <div id="section-papsmear" class="row <?= $pap == 'Pernah' ? '' : 'd-none' ?>">
+            <div class="col-md-6 mb-3">
+                <label class="form-label fw-bold">Tanggal Pap Smear</label>
+                <input type="date" class="form-control" name="papsmear_tanggal" value="<?= htmlspecialchars($v('papsmear_tanggal')) ?>">
+            </div>
+            <div class="col-md-6 mb-3">
+                <label class="form-label fw-bold">Hasil Pap Smear</label>
+                <input type="text" class="form-control" name="papsmear_hasil" value="<?= htmlspecialchars($v('papsmear_hasil')) ?>" placeholder="Hasil pemeriksaan...">
+            </div>
+        </div>
+
+        <!-- Mammografi -->
+        <div class="col-md-12 mb-3">
+            <label class="form-label fw-bold">Mammografi</label>
+            <div class="d-flex flex-wrap gap-3 mb-2">
+                <?php $mammo = $v('mammografi', 'Tidak Pernah'); ?>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="mammografi" value="Tidak Pernah" id="mammo_tidak" <?= $mammo == 'Tidak Pernah' ? 'checked' : '' ?> onchange="toggleMammografi()">
+                    <label class="form-check-label" for="mammo_tidak">Tidak Pernah</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="mammografi" value="Pernah" id="mammo_pernah" <?= $mammo == 'Pernah' ? 'checked' : '' ?> onchange="toggleMammografi()">
+                    <label class="form-check-label" for="mammo_pernah">Pernah</label>
+                </div>
+            </div>
+        </div>
+        <div id="section-mammografi" class="row <?= $mammo == 'Pernah' ? '' : 'd-none' ?>">
+            <div class="col-md-6 mb-3">
+                <label class="form-label fw-bold">Tanggal Mammografi</label>
+                <input type="date" class="form-control" name="mammografi_tanggal" value="<?= htmlspecialchars($v('mammografi_tanggal')) ?>">
+            </div>
+            <div class="col-md-6 mb-3">
+                <label class="form-label fw-bold">Hasil Mammografi</label>
+                <input type="text" class="form-control" name="mammografi_hasil" value="<?= htmlspecialchars($v('mammografi_hasil')) ?>" placeholder="Hasil pemeriksaan...">
+            </div>
+        </div>
+
+        <!-- SADARI -->
+        <div class="col-md-12 mb-3">
+            <label class="form-label fw-bold">SADARI</label>
+            <div class="d-flex flex-wrap gap-3 mb-2">
+                <?php $sadari = $v('sadari', 'Tidak Pernah'); ?>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="sadari" value="Tidak Pernah" id="sadari_tidak" <?= $sadari == 'Tidak Pernah' ? 'checked' : '' ?> onchange="toggleSadari()">
+                    <label class="form-check-label" for="sadari_tidak">Tidak Pernah</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="sadari" value="Pernah" id="sadari_pernah" <?= $sadari == 'Pernah' ? 'checked' : '' ?> onchange="toggleSadari()">
+                    <label class="form-check-label" for="sadari_pernah">Pernah</label>
+                </div>
+            </div>
+        </div>
+        <div id="section-sadari" class="row <?= $sadari == 'Pernah' ? '' : 'd-none' ?>">
+            <div class="col-md-6 mb-3">
+                <label class="form-label fw-bold">Tanggal SADARI</label>
+                <input type="date" class="form-control" name="sadari_tanggal" value="<?= htmlspecialchars($v('sadari_tanggal')) ?>">
+            </div>
+            <div class="col-md-6 mb-3">
+                <label class="form-label fw-bold">Hasil SADARI</label>
+                <input type="text" class="form-control" name="sadari_hasil" value="<?= htmlspecialchars($v('sadari_hasil')) ?>" placeholder="Hasil pemeriksaan...">
+            </div>
+        </div>
+
+        <!-- ====== INFORMASI TAMBAHAN ====== -->
+        <div class="col-12 mb-2 mt-2">
+            <label class="form-label fw-bold text-primary section-heading"><i class="fa fa-info-circle"></i> Informasi Tambahan</label>
+        </div>
+
+        <div class="col-md-12 mb-3">
+            <label class="form-label fw-bold">Informasi Tambahan</label>
+            <div class="d-flex flex-wrap gap-3 mb-2">
+                <?php $info = $v('informasi_tambahan', 'Tidak Ada'); ?>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="informasi_tambahan" value="Tidak Ada" id="info_tidak" <?= $info == 'Tidak Ada' ? 'checked' : '' ?> onchange="toggleInfoTambahan()">
+                    <label class="form-check-label" for="info_tidak">Tidak Ada</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="informasi_tambahan" value="Ada" id="info_ada" <?= $info == 'Ada' ? 'checked' : '' ?> onchange="toggleInfoTambahan()">
+                    <label class="form-check-label" for="info_ada">Ada</label>
+                </div>
+            </div>
+            <textarea class="form-control <?= $info == 'Ada' ? '' : 'd-none' ?>" name="informasi_tambahan_ada" id="informasi_tambahan_ada" rows="3" placeholder="Tuliskan informasi tambahan..."><?= htmlspecialchars($v('informasi_tambahan_ada')) ?></textarea>
+        </div>
+
+        <!-- Tombol -->
         <div class="col-12 mt-3">
             <button type="submit" class="btn btn-primary">
                 <i class="fa fa-save"></i> <?= $edit_mode ? 'Perbarui' : 'Simpan' ?>
             </button>
             <?php if ($edit_mode): ?>
-                <button type="button" class="btn btn-secondary" id="btn-batal-edit">
+                <button type="button" class="btn btn-secondary" id="btn-batal-edit-obs">
                     <i class="fa fa-xmark"></i> Batal
                 </button>
             <?php else: ?>
@@ -626,72 +628,93 @@ $read_mode = ($has_data && $mode !== 'edit');
     </form>
 
     <script>
-        // Auto-hitung GCS Total
-        $(document).on('input', '.gcs-input', function() {
-            var e = parseInt($('#gcs_e').val()) || 0;
-            var v = parseInt($('#gcs_v').val()) || 0;
-            var m = parseInt($('#gcs_m').val()) || 0;
-            var total = e + v + m;
-            $('#gcs_total').val(total > 0 ? total : '');
-        });
+        function toggleHamil() {
+            var val = $('input[name="is_hamil"]:checked').val();
+            if (val === 'Ya') {
+                $('#section-hamil').removeClass('d-none');
+            } else {
+                $('#section-hamil').addClass('d-none');
+            }
+        }
+
+        function togglePenyulit() {
+            var val = $('input[name="penyulit_kehamilan"]:checked').val();
+            if (val === 'Ada') {
+                $('#detail_penyulit').removeClass('d-none');
+            } else {
+                $('#detail_penyulit').addClass('d-none').val('');
+            }
+        }
+
+        function togglePostPartum() {
+            var val = $('input[name="post_partum"]:checked').val();
+            if (val === 'Ya') {
+                $('#section-postpartum').removeClass('d-none');
+            } else {
+                $('#section-postpartum').addClass('d-none');
+            }
+        }
+
+        function togglePersalinan() {
+            var val = $('input[name="riwayat_persalinan"]:checked').val();
+            $('#wrap-partus-spontan-jelaskan').addClass('d-none');
+            $('#wrap-partus-tindakan-jelaskan').addClass('d-none');
+
+            if (val === 'Partus Spontan dengan Penyulit') {
+                $('#wrap-partus-spontan-jelaskan').removeClass('d-none');
+            } else if (val === 'Partus dengan tindakan lainnya') {
+                $('#wrap-partus-tindakan-jelaskan').removeClass('d-none');
+            }
+        }
+
+        function togglePapsmear() {
+            var val = $('input[name="riwayat_papsmear"]:checked').val();
+            if (val === 'Pernah') {
+                $('#section-papsmear').removeClass('d-none');
+            } else {
+                $('#section-papsmear').addClass('d-none');
+            }
+        }
+
+        function toggleMammografi() {
+            var val = $('input[name="mammografi"]:checked').val();
+            if (val === 'Pernah') {
+                $('#section-mammografi').removeClass('d-none');
+            } else {
+                $('#section-mammografi').addClass('d-none');
+            }
+        }
+
+        function toggleSadari() {
+            var val = $('input[name="sadari"]:checked').val();
+            if (val === 'Pernah') {
+                $('#section-sadari').removeClass('d-none');
+            } else {
+                $('#section-sadari').addClass('d-none');
+            }
+        }
 
         function toggleInfoTambahan() {
             var val = $('input[name="informasi_tambahan"]:checked').val();
-            if (val == '1') {
-                $('#info_tambahan_text').removeClass('d-none');
+            if (val === 'Ada') {
+                $('#informasi_tambahan_ada').removeClass('d-none');
             } else {
-                $('#info_tambahan_text').addClass('d-none').val('');
-            }
-        }
-
-        function toggleLainnya(name) {
-            var val = $('input[name="' + name + '"]:checked').val();
-            if (val == 'Lain-lain') {
-                $('#' + name + '_lainnya').removeClass('d-none');
-            } else {
-                $('#' + name + '_lainnya').addClass('d-none').val('');
-            }
-        }
-
-        function toggleAlatBantu(name) {
-            var val = $('input[name="' + name + '"]:checked').val();
-            if (val == 'Alat Bantu') {
-                $('#' + name + '_alat_bantu').removeClass('d-none');
-            } else {
-                $('#' + name + '_alat_bantu').addClass('d-none').val('');
-            }
-        }
-
-        function toggleLuka() {
-            var val = $('input[name="luka"]:checked').val();
-            if (val == '1') {
-                $('#luka_detail_text').removeClass('d-none');
-            } else {
-                $('#luka_detail_text').addClass('d-none').val('');
-            }
-        }
-
-        function togglePolaTidur() {
-            var val = $('input[name="pola_tidur"]:checked').val();
-            if (val == '1') {
-                $('#pola_tidur_text').removeClass('d-none');
-            } else {
-                $('#pola_tidur_text').addClass('d-none').val('');
+                $('#informasi_tambahan_ada').addClass('d-none').val('');
             }
         }
 
         <?php if ($edit_mode): ?>
             // Batal edit — kembali ke read mode
-            $('#btn-batal-edit').on('click', function() {
-                pfAutoSave.clear();
-                var url = '<?= base_url() ?>AsesmenRD/form_penilaian_fisik?no_rwt=<?= $no_rawat ?>';
+            $('#btn-batal-edit-obs').on('click', function() {
+                obsAutoSave.clear();
+                var url = '<?= base_url() ?>AsesmenRD/form_pasien_obstetri_gynekologi?no_rwt=<?= $no_rawat ?>';
                 openContent(false, url);
             });
         <?php endif; ?>
 
         // ============ AUTO-SAVE ke localStorage ============
-        var pfAutoSave = (function() {
-            var STORAGE_KEY = 'pf_draft_<?= $no_rawat ?>_<?= $edit_mode ? 'edit' : 'create' ?>';
+        var obsAutoSave = (function() {
+            var STORAGE_KEY = 'obs_draft_<?= $no_rawat ?>_<?= $edit_mode ? 'edit' : 'create' ?>';
             var timer = null;
 
             function getFormData() {
@@ -764,15 +787,14 @@ $read_mode = ($has_data && $mode !== 'edit');
                     }
                 });
                 // Trigger toggle visibility
+                toggleHamil();
+                togglePenyulit();
+                togglePostPartum();
+                togglePersalinan();
+                togglePapsmear();
+                toggleMammografi();
+                toggleSadari();
                 toggleInfoTambahan();
-                toggleLainnya('pernafasan');
-                toggleLainnya('mulut');
-                toggleAlatBantu('penglihatan');
-                toggleAlatBantu('pendengaran');
-                toggleLuka();
-                togglePolaTidur();
-                // Recalc GCS
-                $('.gcs-input').trigger('input');
             }
 
             function clear() {
@@ -790,17 +812,17 @@ $read_mode = ($has_data && $mode !== 'edit');
 
         // Listen semua perubahan input
         $('#form-assesment-global').on('input change', 'input, textarea, select', function() {
-            pfAutoSave.scheduleSave();
+            obsAutoSave.scheduleSave();
         });
 
         // Hapus draft saat reset
         $('#form-assesment-global').on('reset', function() {
-            pfAutoSave.clear();
+            obsAutoSave.clear();
         });
 
-        // Cek & restore draft saat form dimuat (tunggu Swal loading tertutup)
+        // Cek & restore draft saat form dimuat
         $(document).one('formLoaded', function() {
-            pfAutoSave.restore();
+            obsAutoSave.restore();
         });
     </script>
 <?php endif; ?>

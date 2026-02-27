@@ -240,8 +240,8 @@
                             timer: 1500,
                             showConfirmButton: false
                         }).then(function() {
-                            let refreshUrl = url.replace('simpan_', 'form_').replace('update_', 'form_') + '?no_rwt=<?= $no_rawat; ?>';
-                            openContent(false, refreshUrl);
+                            var reloadUrl = refreshUrl || (url.replace('simpan_', 'form_').replace('update_', 'form_') + '?no_rwt=<?= $no_rawat; ?>');
+                            openContent(false, reloadUrl);
                         });
                     } else {
                         Swal.fire('Gagal', response.message || 'Cek kembali isian Anda', 'error');
