@@ -63,6 +63,18 @@ $read_mode = ($has_data && $mode !== 'edit');
 <?php if ($read_mode): ?>
     <?php
     $total_skor = (int) $pf->penurunan_bb_skor;
+
+    $bb_opsi_labels = [
+        'a'  => 'Tidak ada penurunan BB',
+        'b'  => 'Tidak yakin / tidak tahu / baju terasa longgar',
+        'c1' => 'Ya, 1 - 5 kg',
+        'c2' => 'Ya, 6 - 10 kg',
+        'c3' => 'Ya, 11 - 15 kg',
+        'c4' => 'Ya, > 15 kg',
+    ];
+    $bb_opsi_text = isset($bb_opsi_labels[$pf->penurunan_bb_opsi])
+        ? $bb_opsi_labels[$pf->penurunan_bb_opsi]
+        : htmlspecialchars($pf->penurunan_bb_opsi);
     ?>
 
     <table class="table table-bordered pf-read-table">
@@ -71,7 +83,7 @@ $read_mode = ($has_data && $mode !== 'edit');
         </tr>
         <tr>
             <th>Penurunan BB 6 bulan terakhir</th>
-            <td><?= htmlspecialchars($pf->penurunan_bb_opsi) ?> (Skor <?= (int) $pf->penurunan_bb_skor ?>)</td>
+            <td><?= $bb_opsi_text ?> (Skor <?= (int) $pf->penurunan_bb_skor ?>)</td>
         </tr>
         <tr>
             <th>Asupan makanan berkurang</th>
@@ -248,7 +260,7 @@ $read_mode = ($has_data && $mode !== 'edit');
                 <div class="col-md-6">
                     <div class="form-check">
                         <input class="form-check-input bb-radio" type="radio" name="penurunan_bb_opsi" value="c4" id="bb_c4" data-score="4" <?= $bb_opsi === 'c4' ? 'checked' : '' ?>>
-                        <label class="form-check-label" for="bb_c4">Ya, &gt; 15 kg <span class="badge bg-secondary score-pill">Skor 4</span></label>
+                        <label class="form-check-label" for="bb_c4">Ya, > 15 kg <span class="badge bg-secondary score-pill">Skor 4</span></label>
                     </div>
                 </div>
             </div>

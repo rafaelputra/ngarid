@@ -128,6 +128,15 @@
                     <a class="nav-link text-dark text-start p-2 m-1 border asesment-button" href="#"
                         onclick="return openContent(this,'<?= base_url(); ?>AsesmenRD/form_pengkajian_status_nutrisi?no_rwt=<?= $no_rawat; ?>');">
                         <i class="fa fa-file-lines"></i> Pengkajian Status Nutrisi</a>
+                    <a class="nav-link text-dark text-start p-2 m-1 border asesment-button" href="#"
+                        onclick="return openContent(this,'<?= base_url(); ?>AsesmenRD/form_kebutuhan_komunikasi_edukasi?no_rwt=<?= $no_rawat; ?>');">
+                        <i class="fa fa-file-lines"></i> Kebutuhan Komunikasi dan Edukasi</a>
+                    <a class="nav-link text-dark text-start p-2 m-1 border asesment-button" href="#"
+                        onclick="return openContent(this,'<?= base_url(); ?>AsesmenRD/form_daftar_masalah_keperawatan?no_rwt=<?= $no_rawat; ?>');">
+                        <i class="fa fa-file-lines"></i> Daftar Masalah Keperawatan</a>
+                    <a class="nav-link text-dark text-start p-2 m-1 border asesment-button" href="#"
+                        onclick="return openContent(this,'<?= base_url(); ?>AsesmenRD/form_pengkajian_decubitus?no_rwt=<?= $no_rawat; ?>');">
+                        <i class="fa fa-file-lines"></i> Pengkajian Decubitus</a>
                 </div>
             </div>
             <div class="card-box p-2 mt-2">

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Feb 27, 2026 at 05:11 AM
+-- Generation Time: Mar 02, 2026 at 03:25 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -30,7 +30,12 @@ SET time_zone = "+00:00";
 CREATE TABLE `daftar_masalah_keperawatan` (
   `id` int(11) NOT NULL,
   `no_rawat` varchar(17) NOT NULL,
-  `masalah_keperawatan` set('Bersihan Jalan Nafas tidak efektif','Pola Nafas tidak efektif','Gangguan Pertukaran gas','Kurang Pengetahuan','Resiko Aspirasi','Hipertermia','Ketidakseimbangan nutrisi','Defisit Volume Cairan','Kelebihan Volume Cairan','Intoleransi aktifitas','Perfusi jaringan kardiopulmonal tidak efektif','Perfusi jaringan cerebral tidak efektif','Perfusi jaringan renal tidak efektif','Manajemen regimen teraupetik tidak efektif','Penurunan curah jantung','Defisit perawatan diri','Nyeri','Kecemasan','Takut','Gangguan mobilitas fisik','Mual','Diare','Konstipasi','Retensi urin','Kerusakan integritas kulit','Resiko infeksi','Resiko Injury','Gangguan Pola Tidur','Kerusakan integritas jaringan','Gangguan Body Image','Kelelahan') DEFAULT NULL
+  `masalah_keperawatan` set('Bersihan Jalan Nafas tidak efektif','Pola Nafas tidak efektif','Gangguan Pertukaran gas','Kurang Pengetahuan','Resiko Aspirasi','Hipertermia','Ketidakseimbangan nutrisi','Defisit Volume Cairan','Kelebihan Volume Cairan','Intoleransi aktifitas','Perfusi jaringan kardiopulmonal tidak efektif','Perfusi jaringan cerebral tidak efektif','Perfusi jaringan renal tidak efektif','Manajemen regimen teraupetik tidak efektif','Penurunan curah jantung','Defisit perawatan diri','Nyeri','Kecemasan','Takut','Gangguan mobilitas fisik','Mual','Diare','Konstipasi','Retensi urin','Kerusakan integritas kulit','Resiko infeksi','Resiko Injury','Gangguan Pola Tidur','Kerusakan integritas jaringan','Gangguan Body Image','Kelelahan') DEFAULT NULL,
+  `masalah_keperawatan_a` varchar(50) DEFAULT NULL,
+  `masalah_keperawatan_b` varchar(50) DEFAULT NULL,
+  `masalah_keperawatan_c` varchar(50) DEFAULT NULL,
+  `masalah_keperawatan_d` varchar(50) DEFAULT NULL,
+  `masalah_keperawatan_e` varchar(50) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --

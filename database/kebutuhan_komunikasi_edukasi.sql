@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Feb 27, 2026 at 05:10 AM
+-- Generation Time: Mar 02, 2026 at 05:28 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -37,14 +37,20 @@ CREATE TABLE `kebutuhan_komunikasi_edukasi` (
   `keyakinan_penyakit_lainnya` varchar(100) NOT NULL,
   `bicara` enum('Normal','Gangguan Bicara') NOT NULL,
   `gangguan_bicara_sejak` varchar(100) DEFAULT NULL,
-  `bahasa_sehari` enum('Indonesia','Inggris','Daerah','Lain-lain') NOT NULL,
+  `bahasa_sehari` set('Indonesia','Inggris','Daerah','Lain-lain') NOT NULL,
   `indonesia_ap` enum('aktif','pasif') NOT NULL,
   `inggris_ap` enum('aktif','pasif') NOT NULL,
-  `daerah_jelaskan` varchar(30) NOT NULL,
-  `lain_jelaskan` varchar(30) NOT NULL,
+  `daerah_jelaskan` varchar(30) DEFAULT NULL,
+  `lain_jelaskan` varchar(30) DEFAULT NULL,
   `perlu_penerjemah` enum('Tidak','Ya','Bahasa Isyarat') NOT NULL,
   `ya_bahasa` varchar(20) NOT NULL,
-  `bs_ya_tidak` enum('Ya','Tidak') NOT NULL
+  `bs_ya_tidak` enum('Ya','Tidak') NOT NULL,
+  `hambatan_edukasi` set('Bahasa','Pendengaran','Hilang Memori','Motivasi Buruk','Masalah Penglihatan','Tidak bisa Membaca','Kognitif','Cemas','Emosi','Kesulitan Bicara','Tidak ada pertisipasi dari caregiver','Tidak ditemukan hambatan belajar','Secara fisiologi tidak mampu belajar') DEFAULT NULL,
+  `hambatan_edukasi_lainnya` varchar(100) NOT NULL,
+  `tingkat_pendidikan` enum('TK','SD','SLTP','SLTA','Akademi','Sarjana','Lain-lain') NOT NULL,
+  `tingkat_pendidikan_lainnya` varchar(50) NOT NULL,
+  `pasien_keluarga_menerima_informasi` enum('Ya','Tidak') NOT NULL,
+  `pasien_keluarga_menerima_informasi_lainnya` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --

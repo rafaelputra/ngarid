@@ -80,6 +80,112 @@ class AsesmenRD extends CI_Controller
     $this->load->view('asesmenrd/form-pengkajian-status-nutrisi', $data);
   }
 
+  public function form_kebutuhan_komunikasi_edukasi()
+  {
+    $no_rawat = $this->input->get_post('no_rwt');
+    $mode     = $this->input->get_post('mode');
+
+    $data['no_rawat'] = $no_rawat;
+    $data['pf']       = $this->db->get_where('kebutuhan_komunikasi_edukasi', ['no_rawat' => $no_rawat])->row();
+    $data['mode']     = $mode;
+
+    $this->load->view('asesmenrd/form-kebutuhan-komunikasi-edukasi', $data);
+  }
+
+  // ==================== DAFTAR MASALAH KEPERAWATAN ====================
+
+  public function form_daftar_masalah_keperawatan()
+  {
+    $no_rawat = $this->input->get_post('no_rwt');
+    $mode     = $this->input->get_post('mode');
+
+    $data['no_rawat'] = $no_rawat;
+    $data['pf']       = $this->db->get_where('daftar_masalah_keperawatan', ['no_rawat' => $no_rawat])->row();
+    $data['mode']     = $mode;
+
+    $this->load->view('asesmenrd/form-daftar-masalah-keperawatan', $data);
+  }
+
+  public function simpan_masalah_keperawatan()
+  {
+    $this->output->set_content_type('application/json');
+
+    $no_rawat = $this->input->post('no_rawat');
+    if (empty($no_rawat)) {
+      echo json_encode(['status' => false, 'message' => 'No. Rawat tidak boleh kosong']);
+      return;
+    }
+
+    $data = $this->_masalah_keperawatan_data($no_rawat);
+
+    if ($this->db->insert('daftar_masalah_keperawatan', $data)) {
+      $response = ['status' => true, 'message' => 'Data masalah keperawatan berhasil disimpan'];
+    } else {
+      $error = $this->db->error();
+      $response = ['status' => false, 'message' => 'Gagal menyimpan data: ' . $error['message']];
+    }
+    echo json_encode($response);
+  }
+
+  public function update_masalah_keperawatan()
+  {
+    $this->output->set_content_type('application/json');
+
+    $no_rawat = $this->input->post('no_rawat');
+    $id       = $this->input->post('id');
+    if (empty($no_rawat) || empty($id)) {
+      echo json_encode(['status' => false, 'message' => 'Data tidak valid']);
+      return;
+    }
+
+    $data = $this->_masalah_keperawatan_data($no_rawat);
+
+    $this->db->where('id', $id);
+    if ($this->db->update('daftar_masalah_keperawatan', $data)) {
+      $response = ['status' => true, 'message' => 'Data masalah keperawatan berhasil diperbarui'];
+    } else {
+      $error = $this->db->error();
+      $response = ['status' => false, 'message' => 'Gagal memperbarui data: ' . $error['message']];
+    }
+    echo json_encode($response);
+  }
+
+  public function hapus_masalah_keperawatan()
+  {
+    $this->output->set_content_type('application/json');
+
+    $id = $this->input->post('id');
+    if (empty($id)) {
+      echo json_encode(['status' => false, 'message' => 'Data tidak valid']);
+      return;
+    }
+
+    $this->db->where('id', $id);
+    if ($this->db->delete('daftar_masalah_keperawatan')) {
+      $response = ['status' => true, 'message' => 'Data masalah keperawatan berhasil dihapus'];
+    } else {
+      $error = $this->db->error();
+      $response = ['status' => false, 'message' => 'Gagal menghapus data: ' . $error['message']];
+    }
+    echo json_encode($response);
+  }
+
+  private function _masalah_keperawatan_data($no_rawat)
+  {
+    $masalah = $this->input->post('masalah_keperawatan');
+    $masalah_str = is_array($masalah) ? implode(',', $masalah) : '';
+
+    return [
+      'no_rawat'               => $no_rawat,
+      'masalah_keperawatan'    => $masalah_str,
+      'masalah_keperawatan_a'  => $this->input->post('masalah_keperawatan_a') ?: null,
+      'masalah_keperawatan_b'  => $this->input->post('masalah_keperawatan_b') ?: null,
+      'masalah_keperawatan_c'  => $this->input->post('masalah_keperawatan_c') ?: null,
+      'masalah_keperawatan_d'  => $this->input->post('masalah_keperawatan_d') ?: null,
+      'masalah_keperawatan_e'  => $this->input->post('masalah_keperawatan_e') ?: null,
+    ];
+  }
+
   // ==================== PENILAIAN FISIK ====================
 
   public function simpan_penilaian_fisik()
@@ -478,5 +584,231 @@ class AsesmenRD extends CI_Controller
       $response = ['status' => false, 'message' => 'Gagal menghapus data: ' . $error['message']];
     }
     echo json_encode($response);
+  }
+
+  // ==================== Pengkajian Decubitus ====================
+
+  public function form_pengkajian_decubitus()
+  {
+    $no_rawat = $this->input->get_post('no_rwt');
+    $mode     = $this->input->get_post('mode');
+
+    $data['no_rawat'] = $no_rawat;
+    $data['pf']       = $this->db->get_where('pengkajian_decubitus', ['no_rawat' => $no_rawat])->row();
+    $data['mode']     = $mode;
+
+    $this->load->view('asesmenrd/form-pengkajian-decubitus', $data);
+  }
+
+  public function simpan_pengkajian_decubitus()
+  {
+    $this->output->set_content_type('application/json');
+
+    $no_rawat = $this->input->post('no_rawat');
+    if (empty($no_rawat)) {
+      echo json_encode(['status' => false, 'message' => 'No. Rawat tidak boleh kosong']);
+      return;
+    }
+
+    $data = $this->_pengkajian_decubitus_data($no_rawat);
+
+    if ($this->db->insert('pengkajian_decubitus', $data)) {
+      echo json_encode(['status' => true, 'message' => 'Data pengkajian decubitus berhasil disimpan']);
+    } else {
+      $error = $this->db->error();
+      echo json_encode(['status' => false, 'message' => 'Gagal menyimpan data: ' . $error['message']]);
+    }
+  }
+
+  public function update_pengkajian_decubitus()
+  {
+    $this->output->set_content_type('application/json');
+
+    $no_rawat = $this->input->post('no_rawat');
+    $id       = $this->input->post('id');
+
+    if (empty($no_rawat) || empty($id)) {
+      echo json_encode(['status' => false, 'message' => 'Data tidak valid']);
+      return;
+    }
+
+    $data = $this->_pengkajian_decubitus_data($no_rawat);
+
+    $this->db->where('id', $id);
+    if ($this->db->update('pengkajian_decubitus', $data)) {
+      echo json_encode(['status' => true, 'message' => 'Data pengkajian decubitus berhasil diperbarui']);
+    } else {
+      $error = $this->db->error();
+      echo json_encode(['status' => false, 'message' => 'Gagal memperbarui data: ' . $error['message']]);
+    }
+  }
+
+  public function hapus_pengkajian_decubitus()
+  {
+    $this->output->set_content_type('application/json');
+
+    $id = $this->input->post('id');
+    if (empty($id)) {
+      echo json_encode(['status' => false, 'message' => 'Data tidak valid']);
+      return;
+    }
+
+    $this->db->where('id', $id);
+    if ($this->db->delete('pengkajian_decubitus')) {
+      $response = ['status' => true, 'message' => 'Data pengkajian decubitus berhasil dihapus'];
+    } else {
+      $error = $this->db->error();
+      $response = ['status' => false, 'message' => 'Gagal menghapus data: ' . $error['message']];
+    }
+    echo json_encode($response);
+  }
+
+  private function _pengkajian_decubitus_data($no_rawat)
+  {
+    $persepsi_sensori = (int) $this->input->post('persepsi_sensori');
+    $kelembaban       = (int) $this->input->post('kelembaban');
+    $aktifitas        = (int) $this->input->post('aktifitas');
+    $mobilitas        = (int) $this->input->post('mobilitas');
+    $nutrisi          = (int) $this->input->post('nutrisi');
+    $gesekan          = (int) $this->input->post('gesekan');
+
+    $total_skor = $persepsi_sensori + $kelembaban + $aktifitas + $mobilitas + $nutrisi + $gesekan;
+
+    // Kategori resiko berdasarkan skor Braden
+    if ($total_skor <= 9) {
+      $kategori_resiko = 'Resiko Tinggi';
+    } elseif ($total_skor <= 12) {
+      $kategori_resiko = 'Resiko Sedang';
+    } elseif ($total_skor <= 14) {
+      $kategori_resiko = 'Resiko Rendah';
+    } else {
+      $kategori_resiko = 'Tidak Ada Resiko';
+    }
+
+    return [
+      'no_rawat'        => $no_rawat,
+      'persepsi_sensori' => $persepsi_sensori,
+      'kelembaban'      => $kelembaban,
+      'aktifitas'       => $aktifitas,
+      'mobilitas'       => $mobilitas,
+      'nutrisi'         => $nutrisi,
+      'gesekan'         => $gesekan,
+      'total_skor'      => $total_skor,
+      'kategori_resiko' => $kategori_resiko,
+    ];
+  }
+
+  public function simpan_kebutuhan_komunikasi_edukasi()
+  {
+    $this->output->set_content_type('application/json');
+
+    $no_rawat = $this->input->post('no_rawat');
+    if (empty($no_rawat)) {
+      echo json_encode(['status' => false, 'message' => 'No. Rawat tidak boleh kosong']);
+      return;
+    }
+
+    $data = $this->_kebutuhan_komunikasi_edukasi_data($no_rawat);
+
+    if ($this->db->insert('kebutuhan_komunikasi_edukasi', $data)) {
+      $response = ['status' => true, 'message' => 'Data kebutuhan komunikasi dan edukasi berhasil disimpan'];
+    } else {
+      $error = $this->db->error();
+      $response = ['status' => false, 'message' => 'Gagal menyimpan data: ' . $error['message']];
+    }
+    echo json_encode($response);
+  }
+
+  public function update_kebutuhan_komunikasi_edukasi()
+  {
+    $this->output->set_content_type('application/json');
+    $no_rawat = $this->input->post('no_rawat');
+    $id       = $this->input->post('id');
+    if (empty($no_rawat) || empty($id)) {
+      echo json_encode(['status' => false, 'message' => 'Data tidak valid']);
+      return;
+    }
+
+    $data = $this->_kebutuhan_komunikasi_edukasi_data($no_rawat);
+
+    $this->db->where('id', $id);
+    if ($this->db->update('kebutuhan_komunikasi_edukasi', $data)) {
+      $response = ['status' => true, 'message' => 'Data kebutuhan komunikasi dan edukasi berhasil diperbarui'];
+    } else {
+      $error = $this->db->error();
+      $response = ['status' => false, 'message' => 'Gagal memperbarui data: ' . $error['message']];
+    }
+    echo json_encode($response);
+  }
+
+  public function hapus_kebutuhan_komunikasi_edukasi()
+  {
+    $this->output->set_content_type('application/json');
+
+    $id = $this->input->post('id');
+    if (empty($id)) {
+      echo json_encode(['status' => false, 'message' => 'Data tidak valid']);
+      return;
+    }
+
+    $this->db->where('id', $id);
+    if ($this->db->delete('kebutuhan_komunikasi_edukasi')) {
+      $response = ['status' => true, 'message' => 'Data kebutuhan komunikasi dan edukasi berhasil dihapus'];
+    } else {
+      $error = $this->db->error();
+      $response = ['status' => false, 'message' => 'Gagal menghapus data: ' . $error['message']];
+    }
+    echo json_encode($response);
+  }
+
+  private function _kebutuhan_komunikasi_edukasi_data($no_rawat)
+  {
+    $edukasi = $this->input->post('edukasi_diberikan');
+    if (is_array($edukasi)) {
+      $edukasi = implode(',', $edukasi);
+    }
+
+    $bahasa_sehari = $this->input->post('bahasa_sehari');
+    if (is_array($bahasa_sehari)) {
+      $bahasa_sehari = implode(',', $bahasa_sehari);
+    }
+
+    $hambatan_edukasi = $this->input->post('hambatan_edukasi');
+    if (is_array($hambatan_edukasi)) {
+      $hambatan_edukasi = implode(',', $hambatan_edukasi);
+    }
+
+    $keyakinan          = $this->input->post('keyakinan_penyakit') ?: 'Yakin Sembuh';
+    $bicara             = $this->input->post('bicara') ?: 'Normal';
+    $perlu_penerjemah   = $this->input->post('perlu_penerjemah') ?: 'Tidak';
+    $tingkat_pendidikan = $this->input->post('tingkat_pendidikan') ?: 'SLTA';
+    $menerima_info      = $this->input->post('pasien_keluarga_menerima_informasi') ?: 'Ya';
+
+    $bahasa_arr = $bahasa_sehari ? explode(',', $bahasa_sehari) : [];
+
+    return [
+      'no_rawat'                                  => $no_rawat,
+      'edukasi_diberikan'                         => $edukasi ?: null,
+      'edukasi_diberikan_rs'                      => in_array('Perawatan di RS', explode(',', $edukasi ?: '')) ? $this->input->post('edukasi_diberikan_rs') : null,
+      'edukasi_diberikan_lain_lain'               => in_array('Lain-lain', explode(',', $edukasi ?: '')) ? $this->input->post('edukasi_diberikan_lain_lain') : null,
+      'keyakinan_penyakit'                        => $keyakinan,
+      'keyakinan_penyakit_lainnya'                => $keyakinan === 'Lain-lain' ? $this->input->post('keyakinan_penyakit_lainnya') : '',
+      'bicara'                                    => $bicara,
+      'gangguan_bicara_sejak'                     => $bicara === 'Gangguan Bicara' ? $this->input->post('gangguan_bicara_sejak') : null,
+      'bahasa_sehari'                             => $bahasa_sehari ?: 'Indonesia',
+      'indonesia_ap'                              => $this->input->post('indonesia_ap') ?: 'aktif',
+      'inggris_ap'                                => $this->input->post('inggris_ap') ?: 'aktif',
+      'daerah_jelaskan'                           => in_array('Daerah', $bahasa_arr) ? $this->input->post('daerah_jelaskan') : null,
+      'lain_jelaskan'                             => in_array('Lain-lain', $bahasa_arr) ? $this->input->post('lain_jelaskan') : null,
+      'perlu_penerjemah'                          => $perlu_penerjemah,
+      'ya_bahasa'                                 => $perlu_penerjemah === 'Ya' ? $this->input->post('ya_bahasa') : '',
+      'bs_ya_tidak'                               => $this->input->post('bs_ya_tidak') ?: 'Tidak',
+      'hambatan_edukasi'                          => $hambatan_edukasi ?: null,
+      'hambatan_edukasi_lainnya'                  => $this->input->post('hambatan_edukasi_lainnya') ?: '',
+      'tingkat_pendidikan'                        => $tingkat_pendidikan,
+      'tingkat_pendidikan_lainnya'                => $tingkat_pendidikan === 'Lain-lain' ? $this->input->post('tingkat_pendidikan_lainnya') : '',
+      'pasien_keluarga_menerima_informasi'        => $menerima_info,
+      'pasien_keluarga_menerima_informasi_lainnya' => $menerima_info === 'Tidak' ? $this->input->post('pasien_keluarga_menerima_informasi_lainnya') : '',
+    ];
   }
 }
