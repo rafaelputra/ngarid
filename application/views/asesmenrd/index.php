@@ -135,6 +135,9 @@
                         onclick="return openContent(this,'<?= base_url(); ?>AsesmenRD/form_daftar_masalah_keperawatan?no_rwt=<?= $no_rawat; ?>');">
                         <i class="fa fa-file-lines"></i> Daftar Masalah Keperawatan</a>
                     <a class="nav-link text-dark text-start p-2 m-1 border asesment-button" href="#"
+                        onclick="return openContent(this,'<?= base_url(); ?>AsesmenRD/form_pengkajian_resiko_pasien_jatuh_dewasa?no_rwt=<?= $no_rawat; ?>');">
+                        <i class="fa fa-file-lines"></i> Pengkajian Resiko Jatuh Dewasa</a>
+                    <a class="nav-link text-dark text-start p-2 m-1 border asesment-button" href="#"
                         onclick="return openContent(this,'<?= base_url(); ?>AsesmenRD/form_pengkajian_decubitus?no_rwt=<?= $no_rawat; ?>');">
                         <i class="fa fa-file-lines"></i> Pengkajian Decubitus</a>
                 </div>

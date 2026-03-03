@@ -92,8 +92,6 @@ class AsesmenRD extends CI_Controller
     $this->load->view('asesmenrd/form-kebutuhan-komunikasi-edukasi', $data);
   }
 
-  // ==================== DAFTAR MASALAH KEPERAWATAN ====================
-
   public function form_daftar_masalah_keperawatan()
   {
     $no_rawat = $this->input->get_post('no_rwt');
@@ -105,6 +103,280 @@ class AsesmenRD extends CI_Controller
 
     $this->load->view('asesmenrd/form-daftar-masalah-keperawatan', $data);
   }
+
+  public function form_pengkajian_resiko_pasien_jatuh_dewasa()
+  {
+    $no_rawat = $this->input->get_post('no_rwt');
+    $mode     = $this->input->get_post('mode');
+
+    $data['no_rawat'] = $no_rawat;
+    $data['pasien']   = $this->db->get_where('kunjungan', ['no_rawat' => $no_rawat])->row();
+    $data['mode']     = $mode;
+    $data['pf']       = null;
+    $data['intervensi'] = [];
+
+    // Query tabel asesmen jika ada
+    $this->db->db_debug = false;
+    $query = $this->db->get_where('asesmen_resiko_jatuh_dewasa', ['no_rawat' => $no_rawat]);
+    if ($query) {
+      $data['pf'] = $query->row();
+    }
+
+    // Query tabel intervensi jika ada
+    if (!empty($data['pf'])) {
+      $query2 = $this->db->where('id_pengkajian', $data['pf']->id)
+        ->order_by('tgl_tindakan', 'ASC')
+        ->order_by('shift', 'ASC')
+        ->get('intervensi_jatuh');
+      if ($query2) {
+        $data['intervensi'] = $query2->result();
+      }
+    }
+    $this->db->db_debug = (ENVIRONMENT !== 'production');
+
+    $this->load->view('asesmenrd/form-pengkajian-resiko-pasien-jatuh-dewasa', $data);
+  }
+
+  // ==================== SIMPAN Asesmen Jatuh Dewasa ====================
+
+  public function simpan_asesmen_jatuh_dewasa()
+  {
+    $this->output->set_content_type('application/json');
+
+    try {
+      $no_rawat = $this->input->post('no_rawat');
+      if (empty($no_rawat)) {
+        echo json_encode(['status' => false, 'message' => 'No. Rawat tidak boleh kosong']);
+        return;
+      }
+
+      $data = $this->_asesmen_jatuh_dewasa_data($no_rawat);
+
+      $this->db->db_debug = false;
+      if ($this->db->insert('asesmen_resiko_jatuh_dewasa', $data)) {
+        $response = ['status' => true, 'message' => 'Data asesmen resiko jatuh berhasil disimpan'];
+      } else {
+        $error = $this->db->error();
+        $response = ['status' => false, 'message' => 'Gagal menyimpan data: ' . $error['message']];
+      }
+      $this->db->db_debug = (ENVIRONMENT !== 'production');
+      echo json_encode($response);
+    } catch (\Exception $e) {
+      echo json_encode(['status' => false, 'message' => 'Server error: ' . $e->getMessage()]);
+    }
+  }
+
+  public function update_asesmen_jatuh_dewasa()
+  {
+    $this->output->set_content_type('application/json');
+
+    try {
+      $id       = $this->input->post('id');
+      $no_rawat = $this->input->post('no_rawat');
+
+      if (empty($id) || empty($no_rawat)) {
+        echo json_encode(['status' => false, 'message' => 'Data tidak valid']);
+        return;
+      }
+
+      $data = $this->_asesmen_jatuh_dewasa_data($no_rawat);
+
+      $this->db->db_debug = false;
+      $this->db->where('id', $id);
+      if ($this->db->update('asesmen_resiko_jatuh_dewasa', $data)) {
+        $response = ['status' => true, 'message' => 'Data asesmen resiko jatuh berhasil diperbarui'];
+      } else {
+        $error = $this->db->error();
+        $response = ['status' => false, 'message' => 'Gagal memperbarui data: ' . $error['message']];
+      }
+      $this->db->db_debug = (ENVIRONMENT !== 'production');
+      echo json_encode($response);
+    } catch (\Exception $e) {
+      echo json_encode(['status' => false, 'message' => 'Server error: ' . $e->getMessage()]);
+    }
+  }
+
+  public function hapus_asesmen_jatuh_dewasa()
+  {
+    $this->output->set_content_type('application/json');
+
+    $id = $this->input->post('id');
+    if (empty($id)) {
+      echo json_encode(['status' => false, 'message' => 'Data tidak valid']);
+      return;
+    }
+
+    $this->db->db_debug = false;
+    $this->db->where('id', $id);
+    if ($this->db->delete('asesmen_resiko_jatuh_dewasa')) {
+      $response = ['status' => true, 'message' => 'Data asesmen resiko jatuh berhasil dihapus'];
+    } else {
+      $error = $this->db->error();
+      $response = ['status' => false, 'message' => 'Gagal menghapus data: ' . $error['message']];
+    }
+    $this->db->db_debug = (ENVIRONMENT !== 'production');
+    echo json_encode($response);
+  }
+
+  private function _asesmen_jatuh_dewasa_data($no_rawat)
+  {
+    // Format tanggal_asesmen: datetime-local mengirim 2026-03-03T10:30
+    $tgl_asesmen = $this->input->post('tanggal_asesmen');
+    if ($tgl_asesmen) {
+      $tgl_asesmen = str_replace('T', ' ', $tgl_asesmen);
+    } else {
+      $tgl_asesmen = date('Y-m-d H:i:s');
+    }
+
+    $data = [
+      'no_rawat'         => $no_rawat,
+      'no_rkm_medis'     => $this->input->post('no_rkm_medis'),
+      'tanggal_asesmen'  => $tgl_asesmen,
+      'perawat_penilai'  => $this->input->post('perawat_penilai'),
+      'paraf_perawat'    => $this->input->post('paraf_perawat'),
+    ];
+
+    for ($sn = 1; $sn <= 3; $sn++) {
+      $tgl = $this->input->post("tgl_{$sn}");
+      $data["tgl_{$sn}"] = !empty($tgl) ? $tgl : null;
+
+      $rj = $this->input->post("skor{$sn}_riwayat_jatuh");
+      $ds = $this->input->post("skor{$sn}_diagnosa_sekunder");
+      $ab = $this->input->post("skor{$sn}_alat_bantu");
+      $ti = $this->input->post("skor{$sn}_terpasang_infus");
+      $cb = $this->input->post("skor{$sn}_cara_berjalan");
+      $sm = $this->input->post("skor{$sn}_status_mental");
+
+      // Cek apakah ada minimal satu parameter skor yang diisi
+      $has_any_value = ($rj !== null && $rj !== false) ||
+                       ($ds !== null && $ds !== false) ||
+                       ($ab !== null && $ab !== false) ||
+                       ($ti !== null && $ti !== false) ||
+                       ($cb !== null && $cb !== false) ||
+                       ($sm !== null && $sm !== false);
+
+      // Jika tidak ada data skor sama sekali, set semua null
+      if (!$has_any_value && $sn > 1) {
+        $data["skor{$sn}_riwayat_jatuh"]     = null;
+        $data["skor{$sn}_diagnosa_sekunder"]  = null;
+        $data["skor{$sn}_alat_bantu"]         = null;
+        $data["skor{$sn}_terpasang_infus"]    = null;
+        $data["skor{$sn}_cara_berjalan"]      = null;
+        $data["skor{$sn}_status_mental"]      = null;
+        $data["skor{$sn}_total"]              = null;
+        $data["skor{$sn}_kategori"]           = null;
+        $data["pilih_setelah_{$sn}"]          = null;
+      } else {
+        $rj_val = ($rj !== null && $rj !== false) ? (int) $rj : 0;
+        $ds_val = ($ds !== null && $ds !== false) ? (int) $ds : 0;
+        $ab_val = ($ab !== null && $ab !== false) ? (int) $ab : 0;
+        $ti_val = ($ti !== null && $ti !== false) ? (int) $ti : 0;
+        $cb_val = ($cb !== null && $cb !== false) ? (int) $cb : 0;
+        $sm_val = ($sm !== null && $sm !== false) ? (int) $sm : 0;
+
+        $total = $rj_val + $ds_val + $ab_val + $ti_val + $cb_val + $sm_val;
+
+        if ($total > 45) {
+          $kategori = 'RT';
+        } elseif ($total >= 25) {
+          $kategori = 'RS';
+        } else {
+          $kategori = 'RR';
+        }
+
+        $data["skor{$sn}_riwayat_jatuh"]     = $rj_val;
+        $data["skor{$sn}_diagnosa_sekunder"]  = $ds_val;
+        $data["skor{$sn}_alat_bantu"]         = $ab_val;
+        $data["skor{$sn}_terpasang_infus"]    = $ti_val;
+        $data["skor{$sn}_cara_berjalan"]      = $cb_val;
+        $data["skor{$sn}_status_mental"]      = $sm_val;
+        $data["skor{$sn}_total"]              = $total;
+        $data["skor{$sn}_kategori"]           = $kategori;
+        $data["pilih_setelah_{$sn}"]          = $this->input->post("pilih_setelah_{$sn}") ?: $kategori;
+      }
+    }
+
+    return $data;
+  }
+
+  // ==================== Intervensi Jatuh ====================
+
+  public function simpan_intervensi_jatuh()
+  {
+    $this->output->set_content_type('application/json');
+
+    $id_pengkajian = $this->input->post('id_pengkajian');
+    if (empty($id_pengkajian)) {
+      echo json_encode(['status' => false, 'message' => 'Data pengkajian tidak valid']);
+      return;
+    }
+
+    $data = [
+      'id_pengkajian'          => (int) $id_pengkajian,
+      'tgl_tindakan'           => $this->input->post('tgl_tindakan') ?: date('Y-m-d'),
+      'shift'                  => $this->input->post('shift'),
+      'nama_perawat_shift'     => $this->input->post('nama_perawat_shift'),
+      'paraf_perawat_shift'    => $this->input->post('paraf_perawat_shift'),
+
+      // RT
+      'rt_saran_bantuan'       => $this->input->post('rt_saran_bantuan') ? 1 : 0,
+      'rt_tempatkan_bel'       => $this->input->post('rt_tempatkan_bel') ? 1 : 0,
+      'rt_posisi_tidur_roda'   => $this->input->post('rt_posisi_tidur_roda') ? 1 : 0,
+      'rt_gelang_resiko'       => $this->input->post('rt_gelang_resiko') ? 1 : 0,
+      'rt_segitiga_kuning'     => $this->input->post('rt_segitiga_kuning') ? 1 : 0,
+      'rt_pegangan_tangan'     => $this->input->post('rt_pegangan_tangan') ? 1 : 0,
+      'rt_kamar_mandi_pispot'  => $this->input->post('rt_kamar_mandi_pispot') ? 1 : 0,
+      'rt_observasi_2_3_jam'   => $this->input->post('rt_observasi_2_3_jam') ? 1 : 0,
+      'rt_orientasi_kamar'     => $this->input->post('rt_orientasi_kamar') ? 1 : 0,
+      'rt_pantau_efek_obat'    => $this->input->post('rt_pantau_efek_obat') ? 1 : 0,
+      'rt_bantu_ambulasi'      => $this->input->post('rt_bantu_ambulasi') ? 1 : 0,
+      'rt_benda_dekat_pasien'  => $this->input->post('rt_benda_dekat_pasien') ? 1 : 0,
+      'rt_lantai_bersih_kering' => $this->input->post('rt_lantai_bersih_kering') ? 1 : 0,
+
+      // RS
+      'rs_saran_bantuan'       => $this->input->post('rs_saran_bantuan') ? 1 : 0,
+      'rs_tempatkan_bel'       => $this->input->post('rs_tempatkan_bel') ? 1 : 0,
+      'rs_posisi_tidur_roda'   => $this->input->post('rs_posisi_tidur_roda') ? 1 : 0,
+      'rs_pegangan_tangan'     => $this->input->post('rs_pegangan_tangan') ? 1 : 0,
+      'rs_bantu_ambulasi'      => $this->input->post('rs_bantu_ambulasi') ? 1 : 0,
+      'rs_benda_dekat_pasien'  => $this->input->post('rs_benda_dekat_pasien') ? 1 : 0,
+      'rs_lantai_bersih_kering' => $this->input->post('rs_lantai_bersih_kering') ? 1 : 0,
+
+      // RR
+      'rr_monitor_tanda_vital'   => $this->input->post('rr_monitor_tanda_vital') ? 1 : 0,
+      'rr_pengaman_tempat_tidur' => $this->input->post('rr_pengaman_tempat_tidur') ? 1 : 0,
+    ];
+
+    if ($this->db->insert('intervensi_jatuh', $data)) {
+      $response = ['status' => true, 'message' => 'Intervensi pencegahan jatuh berhasil disimpan'];
+    } else {
+      $error = $this->db->error();
+      $response = ['status' => false, 'message' => 'Gagal menyimpan intervensi: ' . $error['message']];
+    }
+    echo json_encode($response);
+  }
+
+  public function hapus_intervensi_jatuh()
+  {
+    $this->output->set_content_type('application/json');
+
+    $id = $this->input->post('id_intervensi');
+    if (empty($id)) {
+      echo json_encode(['status' => false, 'message' => 'Data tidak valid']);
+      return;
+    }
+
+    $this->db->where('id_intervensi', $id);
+    if ($this->db->delete('intervensi_jatuh')) {
+      $response = ['status' => true, 'message' => 'Intervensi berhasil dihapus'];
+    } else {
+      $error = $this->db->error();
+      $response = ['status' => false, 'message' => 'Gagal menghapus intervensi: ' . $error['message']];
+    }
+    echo json_encode($response);
+  }
+
+  // ==================== MASALAH KEPERAWATAN ====================
 
   public function simpan_masalah_keperawatan()
   {
