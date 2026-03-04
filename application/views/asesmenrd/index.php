@@ -129,17 +129,23 @@
                         onclick="return openContent(this,'<?= base_url(); ?>AsesmenRD/form_pengkajian_status_nutrisi?no_rwt=<?= $no_rawat; ?>');">
                         <i class="fa fa-file-lines"></i> Pengkajian Status Nutrisi</a>
                     <a class="nav-link text-dark text-start p-2 m-1 border asesment-button" href="#"
+                        onclick="return openContent(this,'<?= base_url(); ?>AsesmenRD/form_penilaian_tingkat_nyeri_ccpot?no_rwt=<?= $no_rawat; ?>');">
+                        <i class="fa fa-file-lines"></i> Penilaian CCPOT</a>
+                    <a class="nav-link text-dark text-start p-2 m-1 border asesment-button" href="#"
+                        onclick="return openContent(this,'<?= base_url(); ?>AsesmenRD/form_pengkajian_decubitus?no_rwt=<?= $no_rawat; ?>');">
+                        <i class="fa fa-file-lines"></i> Pengkajian Decubitus</a>
+                    <a class="nav-link text-dark text-start p-2 m-1 border asesment-button" href="#"
+                        onclick="return openContent(this,'<?= base_url(); ?>AsesmenRD/form_pengkajian_resiko_pasien_jatuh_dewasa?no_rwt=<?= $no_rawat; ?>');">
+                        <i class="fa fa-file-lines"></i> Pengkajian Resiko Pasien Jatuh Dewasa</a>
+                    <a class="nav-link text-dark text-start p-2 m-1 border asesment-button" href="#"
+                        onclick="return openContent(this,'<?= base_url(); ?>AsesmenRD/form_penilaian_barthel?no_rwt=<?= $no_rawat; ?>');">
+                        <i class="fa fa-file-lines"></i> Pengkajian Status Fungsional (Barthel)</a>
+                    <a class="nav-link text-dark text-start p-2 m-1 border asesment-button" href="#"
                         onclick="return openContent(this,'<?= base_url(); ?>AsesmenRD/form_kebutuhan_komunikasi_edukasi?no_rwt=<?= $no_rawat; ?>');">
                         <i class="fa fa-file-lines"></i> Kebutuhan Komunikasi dan Edukasi</a>
                     <a class="nav-link text-dark text-start p-2 m-1 border asesment-button" href="#"
                         onclick="return openContent(this,'<?= base_url(); ?>AsesmenRD/form_daftar_masalah_keperawatan?no_rwt=<?= $no_rawat; ?>');">
                         <i class="fa fa-file-lines"></i> Daftar Masalah Keperawatan</a>
-                    <a class="nav-link text-dark text-start p-2 m-1 border asesment-button" href="#"
-                        onclick="return openContent(this,'<?= base_url(); ?>AsesmenRD/form_pengkajian_resiko_pasien_jatuh_dewasa?no_rwt=<?= $no_rawat; ?>');">
-                        <i class="fa fa-file-lines"></i> Pengkajian Resiko Jatuh Dewasa</a>
-                    <a class="nav-link text-dark text-start p-2 m-1 border asesment-button" href="#"
-                        onclick="return openContent(this,'<?= base_url(); ?>AsesmenRD/form_pengkajian_decubitus?no_rwt=<?= $no_rawat; ?>');">
-                        <i class="fa fa-file-lines"></i> Pengkajian Decubitus</a>
                 </div>
             </div>
             <div class="card-box p-2 mt-2">

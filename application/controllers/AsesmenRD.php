@@ -137,6 +137,136 @@ class AsesmenRD extends CI_Controller
     $this->load->view('asesmenrd/form-pengkajian-resiko-pasien-jatuh-dewasa', $data);
   }
 
+  public function form_penilaian_tingkat_nyeri_ccpot()
+  {
+    $no_rawat = $this->input->get_post('no_rwt');
+    $mode     = $this->input->get_post('mode');
+
+    $data['no_rawat'] = $no_rawat;
+    $data['pf']       = $this->db->get_where('tingkat_penilaian_nyeri_cpot', ['no_rawat' => $no_rawat])->row();
+    $data['mode']     = $mode;
+
+    $this->load->view('asesmenrd/form-penilaian-tingkat-nyeri-ccpot', $data);
+  }
+
+  // ==================== Penilaian Tingkat Nyeri CPOT ====================
+
+  public function simpan_penilaian_tingkat_nyeri_ccpot()
+  {
+    $this->output->set_content_type('application/json');
+
+    $no_rawat = $this->input->post('no_rawat');
+    if (empty($no_rawat)) {
+      echo json_encode(['status' => false, 'message' => 'No. Rawat tidak boleh kosong']);
+      return;
+    }
+
+    $data = $this->_penilaian_nyeri_cpot_data($no_rawat);
+
+    $this->db->db_debug = false;
+    if ($this->db->insert('tingkat_penilaian_nyeri_cpot', $data)) {
+      $response = ['status' => true, 'message' => 'Data penilaian tingkat nyeri CPOT berhasil disimpan'];
+    } else {
+      $error = $this->db->error();
+      $response = ['status' => false, 'message' => 'Gagal menyimpan data: ' . $error['message']];
+    }
+    $this->db->db_debug = (ENVIRONMENT !== 'production');
+    echo json_encode($response);
+  }
+
+  public function update_penilaian_tingkat_nyeri_ccpot()
+  {
+    $this->output->set_content_type('application/json');
+
+    $no_rawat = $this->input->post('no_rawat');
+    $id       = $this->input->post('id');
+
+    if (empty($no_rawat) || empty($id)) {
+      echo json_encode(['status' => false, 'message' => 'Data tidak valid']);
+      return;
+    }
+
+    $data = $this->_penilaian_nyeri_cpot_data($no_rawat);
+
+    $this->db->db_debug = false;
+    $this->db->where('id', $id);
+    if ($this->db->update('tingkat_penilaian_nyeri_cpot', $data)) {
+      $response = ['status' => true, 'message' => 'Data penilaian tingkat nyeri CPOT berhasil diperbarui'];
+    } else {
+      $error = $this->db->error();
+      $response = ['status' => false, 'message' => 'Gagal memperbarui data: ' . $error['message']];
+    }
+    $this->db->db_debug = (ENVIRONMENT !== 'production');
+    echo json_encode($response);
+  }
+
+  public function hapus_penilaian_tingkat_nyeri_ccpot()
+  {
+    $this->output->set_content_type('application/json');
+
+    $id = $this->input->post('id');
+    if (empty($id)) {
+      echo json_encode(['status' => false, 'message' => 'Data tidak valid']);
+      return;
+    }
+
+    $this->db->db_debug = false;
+    $this->db->where('id', $id);
+    if ($this->db->delete('tingkat_penilaian_nyeri_cpot')) {
+      $response = ['status' => true, 'message' => 'Data penilaian tingkat nyeri CPOT berhasil dihapus'];
+    } else {
+      $error = $this->db->error();
+      $response = ['status' => false, 'message' => 'Gagal menghapus data: ' . $error['message']];
+    }
+    $this->db->db_debug = (ENVIRONMENT !== 'production');
+    echo json_encode($response);
+  }
+
+  private function _penilaian_nyeri_cpot_data($no_rawat)
+  {
+    $ekspresi_wajah = (int) $this->input->post('ekspresi_wajah');
+    $gerakan_tubuh  = (int) $this->input->post('gerakan_tubuh');
+    $ketegangan_otot = (int) $this->input->post('ketegangan_otot');
+
+    $jenis_ventilator = $this->input->post('jenis_ventilator');
+
+    if ($jenis_ventilator === 'penerimaan_ventilator') {
+      $penerimaan_ventilator = (int) $this->input->post('penerimaan_ventilator');
+      $tanpa_ventilator      = null;
+      $skor_ventilator       = $penerimaan_ventilator;
+    } else {
+      $penerimaan_ventilator = null;
+      $tanpa_ventilator      = (int) $this->input->post('tanpa_ventilator');
+      $skor_ventilator       = $tanpa_ventilator;
+    }
+
+    $total_skor = $ekspresi_wajah + $gerakan_tubuh + $skor_ventilator + $ketegangan_otot;
+
+    // Kategori berdasarkan skor
+    if ($total_skor === 0) {
+      $kategori = 'Tidak Nyeri';
+    } elseif ($total_skor <= 2) {
+      $kategori = 'Nyeri Ringan';
+    } elseif ($total_skor <= 4) {
+      $kategori = 'Nyeri Sedang';
+    } elseif ($total_skor <= 6) {
+      $kategori = 'Nyeri Berat';
+    } else {
+      $kategori = 'Nyeri Berat Sekali';
+    }
+
+    return [
+      'no_rawat'               => $no_rawat,
+      'ekspresi_wajah'         => $ekspresi_wajah,
+      'gerakan_tubuh'          => $gerakan_tubuh,
+      'ketegangan_otot'        => $ketegangan_otot,
+      'penerimaan_ventilator'  => $penerimaan_ventilator,
+      'tanpa_ventilator'       => $tanpa_ventilator,
+      'total_skor'             => $total_skor,
+      'kategori_resiko'        => $kategori,
+    ];
+  }
+
   // ==================== SIMPAN Asesmen Jatuh Dewasa ====================
 
   public function simpan_asesmen_jatuh_dewasa()
@@ -249,11 +379,11 @@ class AsesmenRD extends CI_Controller
 
       // Cek apakah ada minimal satu parameter skor yang diisi
       $has_any_value = ($rj !== null && $rj !== false) ||
-                       ($ds !== null && $ds !== false) ||
-                       ($ab !== null && $ab !== false) ||
-                       ($ti !== null && $ti !== false) ||
-                       ($cb !== null && $cb !== false) ||
-                       ($sm !== null && $sm !== false);
+        ($ds !== null && $ds !== false) ||
+        ($ab !== null && $ab !== false) ||
+        ($ti !== null && $ti !== false) ||
+        ($cb !== null && $cb !== false) ||
+        ($sm !== null && $sm !== false);
 
       // Jika tidak ada data skor sama sekali, set semua null
       if (!$has_any_value && $sn > 1) {
@@ -1081,6 +1211,131 @@ class AsesmenRD extends CI_Controller
       'tingkat_pendidikan_lainnya'                => $tingkat_pendidikan === 'Lain-lain' ? $this->input->post('tingkat_pendidikan_lainnya') : '',
       'pasien_keluarga_menerima_informasi'        => $menerima_info,
       'pasien_keluarga_menerima_informasi_lainnya' => $menerima_info === 'Tidak' ? $this->input->post('pasien_keluarga_menerima_informasi_lainnya') : '',
+    ];
+  }
+  // ==================== Penilaian Barthel Index ====================
+
+  public function form_penilaian_barthel()
+  {
+    $no_rawat = $this->input->get_post('no_rwt');
+    $mode     = $this->input->get_post('mode');
+    $id       = $this->input->get_post('id');
+
+    $data['no_rawat'] = $no_rawat;
+    $data['mode']     = $mode;
+
+    // Get all records for this patient
+    $data['list_pf'] = $this->db->where('no_rawat', $no_rawat)
+      ->order_by('tgl_pengkajian', 'DESC')
+      ->get('penilaian_barthel')
+      ->result();
+
+    // Get single record if editing
+    $data['pf'] = null;
+    if ($id && $mode === 'edit') {
+      $data['pf'] = $this->db->get_where('penilaian_barthel', ['id_penilaian' => $id])->row();
+    }
+
+    $this->load->view('asesmenrd/form-penilaian-barthel', $data);
+  }
+
+  public function simpan_penilaian_barthel()
+  {
+    $this->output->set_content_type('application/json');
+
+    $no_rawat = $this->input->post('no_rawat');
+    if (empty($no_rawat)) {
+      echo json_encode(['status' => false, 'message' => 'No. Rawat tidak boleh kosong']);
+      return;
+    }
+
+    $data = $this->_penilaian_barthel_data($no_rawat);
+
+    if ($this->db->insert('penilaian_barthel', $data)) {
+      $response = ['status' => true, 'message' => 'Data penilaian Barthel Index berhasil disimpan'];
+    } else {
+      $error = $this->db->error();
+      $response = ['status' => false, 'message' => 'Gagal menyimpan data: ' . $error['message']];
+    }
+    echo json_encode($response);
+  }
+
+  public function update_penilaian_barthel()
+  {
+    $this->output->set_content_type('application/json');
+
+    $no_rawat = $this->input->post('no_rawat');
+    $id       = $this->input->post('id_penilaian');
+
+    if (empty($no_rawat) || empty($id)) {
+      echo json_encode(['status' => false, 'message' => 'Data tidak valid']);
+      return;
+    }
+
+    $data = $this->_penilaian_barthel_data($no_rawat);
+
+    $this->db->where('id_penilaian', $id);
+    if ($this->db->update('penilaian_barthel', $data)) {
+      $response = ['status' => true, 'message' => 'Data penilaian Barthel Index berhasil diperbarui'];
+    } else {
+      $error = $this->db->error();
+      $response = ['status' => false, 'message' => 'Gagal memperbarui data: ' . $error['message']];
+    }
+    echo json_encode($response);
+  }
+
+  public function hapus_penilaian_barthel()
+  {
+    $this->output->set_content_type('application/json');
+
+    $id = $this->input->post('id_penilaian');
+    if (empty($id)) {
+      echo json_encode(['status' => false, 'message' => 'Data tidak valid']);
+      return;
+    }
+
+    $this->db->where('id_penilaian', $id);
+    if ($this->db->delete('penilaian_barthel')) {
+      $response = ['status' => true, 'message' => 'Data penilaian Barthel Index berhasil dihapus'];
+    } else {
+      $error = $this->db->error();
+      $response = ['status' => false, 'message' => 'Gagal menghapus data: ' . $error['message']];
+    }
+    echo json_encode($response);
+  }
+
+  private function _penilaian_barthel_data($no_rawat)
+  {
+    $skor_defekasi     = (int) $this->input->post('skor_defekasi');
+    $skor_berkemih     = (int) $this->input->post('skor_berkemih');
+    $skor_bersih_diri  = (int) $this->input->post('skor_bersih_diri');
+    $skor_toilet       = (int) $this->input->post('skor_toilet');
+    $skor_makan        = (int) $this->input->post('skor_makan');
+    $skor_pindah_tempat = (int) $this->input->post('skor_pindah_tempat');
+    $skor_mobilisasi   = (int) $this->input->post('skor_mobilisasi');
+    $skor_berpakaian   = (int) $this->input->post('skor_berpakaian');
+    $skor_tangga       = (int) $this->input->post('skor_tangga');
+    $skor_mandi        = (int) $this->input->post('skor_mandi');
+
+    $total_skor = $skor_defekasi + $skor_berkemih + $skor_bersih_diri + $skor_toilet +
+      $skor_makan + $skor_pindah_tempat + $skor_mobilisasi + $skor_berpakaian +
+      $skor_tangga + $skor_mandi;
+
+    return [
+      'no_rawat'          => $no_rawat,
+      'tgl_pengkajian'    => $this->input->post('tgl_pengkajian') ?: date('Y-m-d'),
+      'periode'           => $this->input->post('periode'),
+      'skor_defekasi'     => $skor_defekasi,
+      'skor_berkemih'     => $skor_berkemih,
+      'skor_bersih_diri'  => $skor_bersih_diri,
+      'skor_toilet'       => $skor_toilet,
+      'skor_makan'        => $skor_makan,
+      'skor_pindah_tempat' => $skor_pindah_tempat,
+      'skor_mobilisasi'   => $skor_mobilisasi,
+      'skor_berpakaian'   => $skor_berpakaian,
+      'skor_tangga'       => $skor_tangga,
+      'skor_mandi'        => $skor_mandi,
+      'total_skor'        => $total_skor,
     ];
   }
 }

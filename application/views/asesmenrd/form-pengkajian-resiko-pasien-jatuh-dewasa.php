@@ -302,7 +302,7 @@ $intervensi_list = isset($intervensi) ? $intervensi : [];
                 <?php
                 $params = [
                     ['Riwayat Jatuh', 'riwayat_jatuh', $riwayat_labels, [['Ya', 25], ['Tidak', 0]]],
-                    ['Diagnosa Sekunder', 'diagnosa_sekunder', $diagnosa_labels, [['Ya', 15], ['Tidak', 0]]],
+                    ['Diagnosa Sekunder I', 'diagnosa_sekunder', $diagnosa_labels, [['Ya', 15], ['Tidak', 0]]],
                     ['Alat Bantu Jalan', 'alat_bantu', $alat_labels, [['Furniture', 30], ['Penopang, tongkat, walker', 15], ['Bedrest, Dibantu Perawat', 0]]],
                     ['Terpasang Infus', 'terpasang_infus', $infus_labels, [['Ya', 20], ['Tidak', 0]]],
                     ['Cara Berjalan/Pindah', 'cara_berjalan', $berjalan_labels, [['Terganggu', 20], ['Lemah', 10], ['Normal, bedrest, pasien mobile', 0]]],
@@ -771,7 +771,7 @@ $intervensi_list = isset($intervensi) ? $intervensi : [];
 
                         <!-- 2. Diagnosa Sekunder -->
                         <div class="mb-3">
-                            <label class="form-label fw-bold">2. Diagnosa Sekunder</label>
+                            <label class="form-label fw-bold">2. Diagnosa Sekunder I </label>
                             <?php $ds = $v("skor{$sn}_diagnosa_sekunder", $sn == 1 ? '0' : null); ?>
                             <div class="d-flex gap-3">
                                 <div class="form-check">
